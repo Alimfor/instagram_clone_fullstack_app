@@ -1,0 +1,40 @@
+server:
+  port: 8000
+
+spring:
+  application:
+    name: media-service
+  data:
+    mongodb:
+      database: insta_clone_medias
+      username: mongousr
+      password: mongopwd
+      port: 27017
+      host: localhost
+      authentication-database: admin
+  servlet:
+    multipart:
+      enabled: true
+      file-size-threshold: 2KB
+      max-file-size: 5MB
+      max-request-size: 20MB
+
+file:
+  upload-dir: D:\Backend\pet\insta-clone-media-service-images\
+  path:
+    prefix: /images
+
+security:
+  jwt:
+    uri: /auth/**
+    header: Authorization
+    prefix: Bearer
+    expiration: 86400
+    secret: YmFkLXBhc3N3b3JkYmFkLXBhc3N3b3JkYmFkLXBhc3N3b3Jk
+
+eureka:
+  client:
+    service-url:
+      default-zone: http://localhost:8761/eureka
+
+
