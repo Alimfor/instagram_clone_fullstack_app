@@ -5,4 +5,4 @@ cd ../auth-service
 cd ../media-service
 ./run.sh &
 cd ../post-service
-./run.sh &
+./run.sh

@@ -1,12 +1,12 @@
 server:
-  port: 9000
+  port: 8001
 
 spring:
   application:
-    name: insta-auth
+    name: post-service
   data:
     mongodb:
-      database: insta_clone_auth_users
+      database: user_posts
       username: mongousr
       password: mongopwd
       port: 27017
@@ -15,27 +15,24 @@ spring:
   cloud:
     stream:
       bindings:
-        sendUserChangeEvent-out-0:
-          destination: send-user-change-event
+        sendPostChangedEvent-out-0:
+          destination: send-post-changed-event
       kafka:
         binder:
           brokers:
             - localhost:9092
 
+eureka:
+  client:
+    service-url:
+      default-zone: http://localhost:8761
+
 security:
+  basic:
+    enable: false
   jwt:
     uri: /auth/**
     header: Authorization
     prefix: Bearer
-    subject: 'User details'
-    issuer: auth-service
     expiration: 86400
     secret: YmFkLXBhc3N3b3JkYmFkLXBhc3N3b3JkYmFkLXBhc3N3b3Jk
-  service:
-    username: d245ef53-5ad5-4216-9c56-89fe0f8302a0
-    password: ef919ae4-b893-4969-b782-57978180ad33
-
-eureka:
-  client:
-    service-url:
-      default-zone: http://localhost:8761/eureka
