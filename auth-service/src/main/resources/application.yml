@@ -15,12 +15,16 @@ spring:
   cloud:
     stream:
       bindings:
-        sendUserChangeEvent-out-0:
-          destination: send-user-change-event
+        sendUserChangedEvent-out-0:
+          destination: send-user-changed-event
+          content-type: application/json
       kafka:
         binder:
           brokers:
             - localhost:9092
+          configuration:
+            key:
+              deserializer: org.apache.kafka.common.serialization.StringDeserializer
 
 security:
   jwt:

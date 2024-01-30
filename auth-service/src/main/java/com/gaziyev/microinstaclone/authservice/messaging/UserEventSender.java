@@ -41,7 +41,7 @@ public class UserEventSender {
 				.setHeader(KafkaHeaders.RECEIVED_KEY, userEventPayload.getId())
 				.build();
 
-		boolean result = streamBridge.send("sendUserChangeEvent-out-0", message);
+		boolean result = streamBridge.send("sendUserChangedEvent-out-0", message);
 		log.info("Is the Communication request successful? {}", result);
 	}
 

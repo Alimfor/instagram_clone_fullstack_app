@@ -42,11 +42,25 @@ services:
       - MONGO_INITDB_ROOT_USERNAME=mongousr
       - MONGO_INITDB_ROOT_PASSWORD=mongopwd
     volumes:
-      - mongodb_vol:/data/db
+      - D:\db\instaMongo:/data/db
     ports:
       - 27017:27017
     networks:
       - mongo_network
+
+  neo4j:
+    image: neo4j
+    ports:
+      - 7687:7687
+      - 7474:7474
+
+  cassandra:
+    image: cassandra
+    ports:
+      - 7000:7000
+      - 9042:9042
+    volumes:
+      - D:\db\instaCassandra:/var/lib/cassandra
 
 networks:
   mongo_network:
