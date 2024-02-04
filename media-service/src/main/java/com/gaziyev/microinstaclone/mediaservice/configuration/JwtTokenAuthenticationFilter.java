@@ -1,8 +1,7 @@
 package com.gaziyev.microinstaclone.mediaservice.configuration;
 
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.Jwts;
-import jakarta.servlet.Filter;
+import com.auth0.jwt.JWT;
+import com.auth0.jwt.interfaces.DecodedJWT;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -34,15 +33,10 @@ public class JwtTokenAuthenticationFilter extends OncePerRequestFilter {
 
 		try{
 
-			Claims claims = Jwts.parserBuilder()
-					.setSigningKey(jwtConfig.getSecret())
-					.build()
-					.parseClaimsJws(token)
-					.getBody();
-
-			String username = claims.getSubject();
+			DecodedJWT jwt = JWT.decode(token);
+			String username = jwt.getClaim("username").asString();
 			if (username != null) {
-				List<String> authorities = (List<String>) claims.get("authorities");
+				List<String> authorities = jwt.getClaim("authorities").asList(String.class);
 
 				UsernamePasswordAuthenticationToken auth =
 						new UsernamePasswordAuthenticationToken(username, null,

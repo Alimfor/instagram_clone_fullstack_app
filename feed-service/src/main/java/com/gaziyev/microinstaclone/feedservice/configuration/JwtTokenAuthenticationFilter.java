@@ -1,4 +1,4 @@
-package com.gaziyev.microinstaclone.graphservice.configuration;
+package com.gaziyev.microinstaclone.feedservice.configuration;
 
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.interfaces.DecodedJWT;
@@ -34,6 +34,7 @@ public class JwtTokenAuthenticationFilter extends OncePerRequestFilter {
         try{
 
             DecodedJWT jwt = JWT.decode(token);
+
             String username = jwt.getClaim("username").asString();
             if (username != null) {
                 List<String> authorities = jwt.getClaim("authorities").asList(String.class);

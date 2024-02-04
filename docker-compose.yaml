@@ -3,7 +3,7 @@ version: '3.8'
 services:
   kafka:
     image: wurstmeister/kafka
-    container_name: "kafka"
+    container_name: kafka
     ports:
       - "9092:9092"
     environment:
@@ -15,6 +15,7 @@ services:
 
   zookeeper:
     image: wurstmeister/zookeeper
+    container_name: zookeeper
     ports:
       - "2181:2181"
     environment:
@@ -22,6 +23,7 @@ services:
 
   mongo-express:
     image: mongo-express
+    container_name: mongo_express
     environment:
       - ME_CONFIG_MONGODB_ADMINUSERNAME=mongousr
       - ME_CONFIG_MONGODB_ADMINPASSWORD=mongopwd
@@ -29,7 +31,7 @@ services:
       - ME_CONFIG_MONGODB_SERVER=mongodb
       - ME_CONFIG_OPTIONS_EDITORTHEME=dark
     ports:
-      - 8081:8081
+      - "8081:8081"
     depends_on:
       - mongodb
     restart: always
@@ -38,29 +40,31 @@ services:
 
   mongodb:
     image: mongo
+    container_name: mongo
     environment:
       - MONGO_INITDB_ROOT_USERNAME=mongousr
       - MONGO_INITDB_ROOT_PASSWORD=mongopwd
     volumes:
-      - D:\db\instaMongo:/data/db
+      - D:/db/instaMongo:/data/db
     ports:
-      - 27017:27017
+      - "27017:27017"
     networks:
       - mongo_network
 
   neo4j:
     image: neo4j
+    container_name: neo4j
     ports:
-      - 7687:7687
-      - 7474:7474
+      - "7687:7687"
+      - "7474:7474"
 
-  cassandra:
-    image: cassandra
+  redis:
+    image: redis
+    container_name: redis
     ports:
-      - 7000:7000
-      - 9042:9042
+      - "6379:6379"
     volumes:
-      - D:\db\instaCassandra:/var/lib/cassandra
+      - D:/db/redisVolumes:/var/lib/redis
 
 networks:
   mongo_network:

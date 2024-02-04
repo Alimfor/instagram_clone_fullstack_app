@@ -1,7 +1,8 @@
 package com.gaziyev.microinstaclone.authservice.configuration;
 
+import com.auth0.jwt.JWT;
+import com.auth0.jwt.interfaces.DecodedJWT;
 import com.gaziyev.microinstaclone.authservice.service.JwtTokenProvider;
-import io.jsonwebtoken.Claims;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -39,16 +40,16 @@ public class JwtTokenAuthenticationFilter extends OncePerRequestFilter {
 
 		String token = header.substring(7);
 
-		if (tokenProvider.validateToken(token, userDetailsService)) {
+		if (tokenProvider.validateToken(token)) {
 
-			Claims claims = tokenProvider.extractAllClaims(token);
-			String username = claims.getSubject();
+			DecodedJWT jwt = JWT.decode(token);
+			String username = jwt.getClaim("username").asString();
 
 			UsernamePasswordAuthenticationToken auth = null;
 
 			if (username.equals(serviceUsername)) {
 
-				List<String> authorities = (List<String>) claims.get("authorities");
+				List<String> authorities = jwt.getClaim("authorities").asList(String.class);
 
 				auth = new UsernamePasswordAuthenticationToken(username, null,
 				                                               authorities

@@ -30,7 +30,7 @@ security:
   jwt:
     uri: /auth/**
     header: Authorization
-    prefix: Bearer
+    prefix: 'Bearer '
     subject: 'User details'
     issuer: auth-service
     expiration: 86400

@@ -16,7 +16,7 @@ spring:
     stream:
       bindings:
         sendPostChangedEvent-out-0:
-          destination: send-post-changed-event
+          destination: post-changed-event
       kafka:
         binder:
           brokers:
@@ -33,6 +33,6 @@ security:
   jwt:
     uri: /auth/**
     header: Authorization
-    prefix: Bearer
+    prefix: 'Bearer '
     expiration: 86400
     secret: YmFkLXBhc3N3b3JkYmFkLXBhc3N3b3JkYmFkLXBhc3N3b3Jk
