@@ -1,8 +1,8 @@
 package com.gaziyev.microinstaclone.postservice.controller;
 
 import com.gaziyev.microinstaclone.postservice.entity.Post;
-import com.gaziyev.microinstaclone.postservice.payload.ApiResponse;
-import com.gaziyev.microinstaclone.postservice.payload.PostRequest;
+import com.gaziyev.microinstaclone.postservice.dto.ApiResponseDTO;
+import com.gaziyev.microinstaclone.postservice.dto.PostRequestDTO;
 import com.gaziyev.microinstaclone.postservice.service.PostService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -22,8 +22,14 @@ public class PostController {
 
 	private final PostService postService;
 
-	@PostMapping("/posts")
-	public ResponseEntity<?> createPost(@RequestBody PostRequest postRequest) {
+	private static final String POST_CREATE_POST = "/posts/create";
+	private static final String DELETE_POST_BY_ID = "/posts/{id}";
+	private static final String GET_CURRENT_USER_POSTS ="/posts/me";
+	private static final String GET_USER_POSTS = "/posts/{username}";
+	private static final String POST_FIND_POSTS_BY_IDS = "/posts/in";
+
+	@PostMapping(POST_CREATE_POST)
+	public ResponseEntity<?> createPost(@RequestBody PostRequestDTO postRequest) {
 		log.info("received a request to create a post for image {}",
 		         postRequest.getImageUrl()
 		);
@@ -36,10 +42,10 @@ public class PostController {
 
 		return ResponseEntity
 				.created(location)
-				.body(new ApiResponse(true, "Post created successfully"));
+				.body(new ApiResponseDTO(true, "Post created successfully"));
 	}
 
-	@DeleteMapping("/posts/{id}")
+	@DeleteMapping(DELETE_POST_BY_ID)
 	@ResponseStatus(HttpStatus.NO_CONTENT)
 	public void deletePost(@PathVariable String id,
 	                       Authentication authentication
@@ -50,7 +56,7 @@ public class PostController {
 		postService.deletePost(id, authentication.getPrincipal().toString());
 	}
 
-	@GetMapping("/posts/me")
+	@GetMapping(GET_CURRENT_USER_POSTS)
 	public ResponseEntity<?> findCurrentUserPosts(
 			Authentication authentication
 	) {
@@ -64,7 +70,7 @@ public class PostController {
 		return ResponseEntity.ok(posts);
 	}
 
-	@GetMapping("/posts/{username}")
+	@GetMapping(GET_USER_POSTS)
 	public ResponseEntity<?> findUserPosts(@PathVariable String username) {
 		log.info("retrieving posts for user {}", username);
 
@@ -74,7 +80,7 @@ public class PostController {
 		return ResponseEntity.ok(posts);
 	}
 
-	@PostMapping("/posts/in")
+	@PostMapping(POST_FIND_POSTS_BY_IDS)
 	public ResponseEntity<?> findPostsByIdIn(@RequestBody List<String> ids) {
 		log.info("retrieving posts for ids {}", ids.size());
 

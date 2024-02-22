@@ -1,8 +1,8 @@
 package com.gaziyev.microinstaclone.graphservice.controller;
 
 import com.gaziyev.microinstaclone.graphservice.entity.User;
-import com.gaziyev.microinstaclone.graphservice.payload.ApiResponse;
-import com.gaziyev.microinstaclone.graphservice.payload.FollowRequest;
+import com.gaziyev.microinstaclone.graphservice.dto.ApiResponseDTO;
+import com.gaziyev.microinstaclone.graphservice.dto.FollowRequestDTO;
 import com.gaziyev.microinstaclone.graphservice.service.UserService;
 import com.gaziyev.microinstaclone.graphservice.util.AppConstants;
 import lombok.RequiredArgsConstructor;
@@ -17,8 +17,16 @@ public class UserController {
 
     private final UserService userService;
 
-    @PostMapping("/users/followers")
-    public ResponseEntity<?> follow(@RequestBody FollowRequest followRequest) {
+    private static final String POST_FOLLOW_TO_USER = "/users/followers";
+    private static final String GET_NODE_DEGREE = "/users/{username}/degree";
+    private static final String GET_VERIFY_FOLLOWING_BY_USERNAMES
+            = "/users/{followerUsername}/following/{followingUsername}";
+    private static final String GET_FOLLOWERS_BY_USERNAME = "/users/{username}/followers";
+    private static final String GET_PAGINATED_FOLLOWERS_BY_USERNAME = "/users/paginated/{username}/followers";
+    private static final String GET_FOLLOWING_BY_USERNAME = "/users/{username}/following";
+
+    @PostMapping(POST_FOLLOW_TO_USER)
+    public ResponseEntity<?> follow(@RequestBody FollowRequestDTO followRequest) {
 
         log.info("received a follow request follow {} following {}",
                 followRequest.getFollower().getUsername(),
@@ -46,17 +54,17 @@ public class UserController {
         );
         log.info(message);
 
-        return ResponseEntity.ok(new ApiResponse(true, message));
+        return ResponseEntity.ok(new ApiResponseDTO(true, message));
     }
 
-    @GetMapping("/users/{username}/degree")
+    @GetMapping(GET_NODE_DEGREE)
     public ResponseEntity<?> findNodeDegree(@PathVariable String username) {
 
         log.info("fetching node degree for user {}", username);
         return ResponseEntity.ok(userService.findNodeDegree(username));
     }
 
-    @GetMapping("/users/{followerUsername}/following/{followingUsername}")
+    @GetMapping(GET_VERIFY_FOLLOWING_BY_USERNAMES)
     public ResponseEntity<?> isFollowing(
             @PathVariable String followerUsername,
             @PathVariable String followingUsername
@@ -66,14 +74,14 @@ public class UserController {
         return ResponseEntity.ok(userService.isFollowing(followerUsername, followingUsername));
     }
 
-    @GetMapping("/users/{username}/followers")
+    @GetMapping(GET_FOLLOWERS_BY_USERNAME)
     public ResponseEntity<?> findFollowers(@PathVariable String username) {
 
         log.info("fetching followers for user {}", username);
         return ResponseEntity.ok(userService.findFollowers(username));
     }
 
-    @GetMapping("/users/paginated/{username}/followers")
+    @GetMapping(GET_PAGINATED_FOLLOWERS_BY_USERNAME)
     public ResponseEntity<?> findPaginatedFollowers(
             @PathVariable String username,
             @RequestParam(value = "page", defaultValue = AppConstants.DEFAULT_PAGE_NUMBER) int page,
@@ -84,7 +92,7 @@ public class UserController {
         return ResponseEntity.ok(userService.findPaginatedFollowers(username, page, size));
     }
 
-    @GetMapping("/users/{username}/following")
+    @GetMapping(GET_FOLLOWING_BY_USERNAME)
     public ResponseEntity<?> findFollowing(@PathVariable String username) {
 
         log.info("fetching following for user {}", username);

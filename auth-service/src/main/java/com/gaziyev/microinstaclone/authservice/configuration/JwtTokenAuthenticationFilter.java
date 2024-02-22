@@ -2,7 +2,7 @@ package com.gaziyev.microinstaclone.authservice.configuration;
 
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.interfaces.DecodedJWT;
-import com.gaziyev.microinstaclone.authservice.service.JwtTokenProvider;
+import com.gaziyev.microinstaclone.authservice.service.JwtTokenService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -22,70 +22,70 @@ import java.util.List;
 @RequiredArgsConstructor
 public class JwtTokenAuthenticationFilter extends OncePerRequestFilter {
 
-	private final JwtConfig jwtConfig;
-	private final JwtTokenProvider tokenProvider;
-	private final UserDetailsService userDetailsService;
-	private final String serviceUsername;
+    private final JwtConfig jwtConfig;
+    private final JwtTokenService tokenProvider;
+    private final UserDetailsService userDetailsService;
+    private final String serviceUsername;
 
 
-	@Override
-	protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
+    @Override
+    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
 
-		String header = request.getHeader(jwtConfig.getHeader());
+        String header = request.getHeader(jwtConfig.getHeader());
 
-		if (header == null || !header.startsWith(jwtConfig.getPrefix())) {
-			filterChain.doFilter(request, response);
-			return;
-		}
+        if (header == null || !header.startsWith(jwtConfig.getPrefix())) {
+            filterChain.doFilter(request, response);
+            return;
+        }
 
-		String token = header.substring(7);
+        String token = header.substring(7);
 
-		if (tokenProvider.validateToken(token)) {
+        if (!tokenProvider.validateToken(token)) {
+            SecurityContextHolder.clearContext();
+            filterChain.doFilter(request, response);
+        }
+        DecodedJWT jwt = JWT.decode(token);
+        String username = jwt.getClaim("username").asString();
 
-			DecodedJWT jwt = JWT.decode(token);
-			String username = jwt.getClaim("username").asString();
+        UsernamePasswordAuthenticationToken auth = null;
 
-			UsernamePasswordAuthenticationToken auth = null;
+        if (username.equals(serviceUsername)) {
 
-			if (username.equals(serviceUsername)) {
+            List<String> authorities = jwt.getClaim("authorities").asList(String.class);
 
-				List<String> authorities = jwt.getClaim("authorities").asList(String.class);
+            auth = new UsernamePasswordAuthenticationToken(username, null,
+                    authorities
+                            .stream()
+                            .map(SimpleGrantedAuthority::new)
+                            .toList()
+            );
 
-				auth = new UsernamePasswordAuthenticationToken(username, null,
-				                                               authorities
-						                                               .stream()
-						                                               .map(SimpleGrantedAuthority::new)
-						                                               .toList()
-				);
 
-			} else {
-				UserDetails userDetails = userDetailsService
-						.loadUserByUsername(username);
+        } else {
+            UserDetails userDetails = userDetailsService
+                    .loadUserByUsername(username);
 
-				if (userDetails == null) {
-					filterChain.doFilter(request, response);
-					return;
-				}
+            if (userDetails == null) {
+                filterChain.doFilter(request, response);
+                return;
+            }
 
-				UsernamePasswordAuthenticationToken authenticationToken =
-						new UsernamePasswordAuthenticationToken(
-								userDetails, null,
-								userDetails.getAuthorities()
-						);
+            UsernamePasswordAuthenticationToken authenticationToken =
+                    new UsernamePasswordAuthenticationToken(
+                            userDetails, null,
+                            userDetails.getAuthorities()
+                    );
 
-				authenticationToken.setDetails(
-						new WebAuthenticationDetailsSource()
-								.buildDetails(request)
-				);
+            authenticationToken.setDetails(
+                    new WebAuthenticationDetailsSource()
+                            .buildDetails(request)
+            );
 
-				auth = authenticationToken;
-			}
+            auth = authenticationToken;
+        }
 
-			SecurityContextHolder.getContext().setAuthentication(auth);
-		} else {
-			SecurityContextHolder.clearContext();
-		}
+        SecurityContextHolder.getContext().setAuthentication(auth);
 
-		filterChain.doFilter(request, response);
-	}
+        filterChain.doFilter(request, response);
+    }
 }

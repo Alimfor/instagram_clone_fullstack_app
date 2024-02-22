@@ -12,8 +12,8 @@ import java.util.Set;
 @AllArgsConstructor
 public class Profile {
 
-	private String displayName;
-	private String profilePictureUrl;
-	private Date birthday;
-	private Set<Address> addresses;
+    private String displayName;
+    private String profilePictureUrl;
+    private Date birthday;
+    private Set<Address> addresses;
 }

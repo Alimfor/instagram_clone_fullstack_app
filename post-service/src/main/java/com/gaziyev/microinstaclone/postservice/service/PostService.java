@@ -4,7 +4,7 @@ import com.gaziyev.microinstaclone.postservice.entity.Post;
 import com.gaziyev.microinstaclone.postservice.exception.NotAllowedException;
 import com.gaziyev.microinstaclone.postservice.exception.ResourceNotFoundException;
 import com.gaziyev.microinstaclone.postservice.messaging.PostEventSender;
-import com.gaziyev.microinstaclone.postservice.payload.PostRequest;
+import com.gaziyev.microinstaclone.postservice.dto.PostRequestDTO;
 import com.gaziyev.microinstaclone.postservice.repository.PostRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -22,7 +22,7 @@ public class PostService {
 	private final PostRepository postRepository;
 	private final PostEventSender postEventSender;
 
-	public Post createPost(PostRequest postRequest) {
+	public Post createPost(PostRequestDTO postRequest) {
 		log.info("creating post image url: {}", postRequest.getImageUrl());
 
 		Post post = new Post(postRequest.getImageUrl(), postRequest.getCaption());

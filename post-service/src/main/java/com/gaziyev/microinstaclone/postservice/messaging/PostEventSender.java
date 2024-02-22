@@ -1,7 +1,7 @@
 package com.gaziyev.microinstaclone.postservice.messaging;
 
 import com.gaziyev.microinstaclone.postservice.entity.Post;
-import com.gaziyev.microinstaclone.postservice.payload.PostEventPayload;
+import com.gaziyev.microinstaclone.postservice.dto.PostEventPayloadDTO;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.cloud.stream.function.StreamBridge;
@@ -35,9 +35,9 @@ public class PostEventSender {
 		sendPostChangedEvent(convertTo(post, PostEventType.DELETED));
 	}
 
-	public void sendPostChangedEvent(PostEventPayload eventPayload) {
+	public void sendPostChangedEvent(PostEventPayloadDTO eventPayload) {
 
-		Message<PostEventPayload> message = MessageBuilder
+		Message<PostEventPayloadDTO> message = MessageBuilder
 				.withPayload(eventPayload)
 				.setHeader(KafkaHeaders.RECEIVED_KEY, eventPayload.getId())
 				.build();
@@ -51,8 +51,8 @@ public class PostEventSender {
 
 	}
 
-	private PostEventPayload convertTo(Post post, PostEventType postEventType) {
-		return PostEventPayload.builder()
+	private PostEventPayloadDTO convertTo(Post post, PostEventType postEventType) {
+		return PostEventPayloadDTO.builder()
 				.id(post.getId())
 				.username(post.getUsername())
 				.imageUrl(post.getImageUrl())

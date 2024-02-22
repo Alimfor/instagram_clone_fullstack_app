@@ -4,9 +4,9 @@ import com.gaziyev.microinstaclone.feedservice.client.AuthServiceClient;
 import com.gaziyev.microinstaclone.feedservice.configuration.JwtConfig;
 import com.gaziyev.microinstaclone.feedservice.exception.UnableToGetAccessTokenException;
 import com.gaziyev.microinstaclone.feedservice.exception.UnableToGetUsersException;
-import com.gaziyev.microinstaclone.feedservice.payload.JwtAuthenticationResponse;
-import com.gaziyev.microinstaclone.feedservice.payload.ServiceLoginRequest;
-import com.gaziyev.microinstaclone.feedservice.payload.UserSummary;
+import com.gaziyev.microinstaclone.feedservice.dto.JwtAuthenticationResponseDTO;
+import com.gaziyev.microinstaclone.feedservice.dto.ServiceLoginRequestDTO;
+import com.gaziyev.microinstaclone.feedservice.dto.UserSummaryDTO;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
@@ -24,12 +24,12 @@ import static java.util.stream.Collectors.toMap;
 public class AuthService {
 
     private final AuthServiceClient authServiceClient;
-    private final ServiceLoginRequest serviceLoginRequest;
+    private final ServiceLoginRequestDTO serviceLoginRequest;
     private final JwtConfig jwtConfig;
 
     public String getAccessToken() {
 
-        ResponseEntity<JwtAuthenticationResponse> response =
+        ResponseEntity<JwtAuthenticationResponseDTO> response =
                 authServiceClient.signIn(serviceLoginRequest);
 
         if (!response.getStatusCode().is2xxSuccessful()) {
@@ -41,12 +41,12 @@ public class AuthService {
         }
 
         return Objects.requireNonNull(response.getBody())
-                .getAccessToken();
+                .getTokens().get("access_token");
     }
 
     public Map<String, String> getUsersNameWithProfilePic(String token, List<String> usernames) {
 
-        ResponseEntity<List<UserSummary>> response =
+        ResponseEntity<List<UserSummaryDTO>> response =
                 authServiceClient.findByUsername(jwtConfig.getPrefix() + token, usernames);
 
         if (!response.getStatusCode().is2xxSuccessful()) {
@@ -60,7 +60,7 @@ public class AuthService {
 
         return Objects.requireNonNull(response.getBody())
                 .stream()
-                .collect(toMap(UserSummary::getUsername,
-                        UserSummary::getProfilePic));
+                .collect(toMap(UserSummaryDTO::getUsername,
+                        UserSummaryDTO::getProfilePicture));
     }
 }

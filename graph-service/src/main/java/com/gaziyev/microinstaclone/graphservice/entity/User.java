@@ -1,5 +1,6 @@
 package com.gaziyev.microinstaclone.graphservice.entity;
 
+import com.gaziyev.microinstaclone.graphservice.entity.projection.UserProjection;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
@@ -14,7 +15,7 @@ import java.util.Set;
 @Setter
 @Builder
 @Node("User")
-public class User {
+public class User implements UserProjection {
 
     @Id
     @GeneratedValue
@@ -24,6 +25,7 @@ public class User {
     private String name;
     private String profilePic;
 
-    @Relationship(type = "IS_FOLLOWING")
+    @Relationship(value = "IS_FOLLOWING")
     private Set<Friendship> friendships;
+
 }

@@ -1,6 +1,7 @@
 package com.gaziyev.microinstaclone.graphservice.repository;
 
 import com.gaziyev.microinstaclone.graphservice.entity.User;
+import com.gaziyev.microinstaclone.graphservice.entity.projection.UserProjection;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.neo4j.repository.Neo4jRepository;
@@ -13,8 +14,13 @@ import java.util.Optional;
 @Repository
 public interface UserRepository extends Neo4jRepository<User, Long> {
 
-    Optional<User> findByUserId(String userId);
-    Optional<User> findByUsername(String username);
+
+    @Query("""
+            MATCH (u:User {userId: $userId})
+            RETURN u.userId as userId, u.username as username, u.name as name, u.profilePic as profilePic
+            """)
+    Optional<UserProjection> findByUserId(String userId);
+    Optional<UserProjection> findByUsername(String username);
 
     @Query("MATCH (n)-[r]->() where n.username=$username RETURN COUNT(r)")
     long findOutDegree(String username);

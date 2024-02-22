@@ -1,6 +1,6 @@
 package com.gaziyev.microinstaclone.feedservice.client;
 
-import com.gaziyev.microinstaclone.feedservice.dto.Post;
+import com.gaziyev.microinstaclone.feedservice.payload.Post;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -9,7 +9,10 @@ import org.springframework.web.bind.annotation.RequestHeader;
 
 import java.util.List;
 
-@FeignClient(name = "post-service")
+@FeignClient(
+        url = "http://localhost:8000/api/posts-ids/",//http:localhost:8765/insta",
+        name = "post-service"
+)
 public interface PostServiceClient {
 
     String POST_FIND_POSTS_BY_IDS = "/posts/in";

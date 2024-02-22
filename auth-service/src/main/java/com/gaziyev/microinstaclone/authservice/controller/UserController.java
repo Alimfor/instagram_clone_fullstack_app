@@ -1,14 +1,14 @@
 package com.gaziyev.microinstaclone.authservice.controller;
 
-import com.gaziyev.microinstaclone.authservice.entity.InstaUserDetails;
+import com.gaziyev.microinstaclone.authservice.model.InstaUserDetails;
 import com.gaziyev.microinstaclone.authservice.entity.Profile;
 import com.gaziyev.microinstaclone.authservice.entity.User;
 import com.gaziyev.microinstaclone.authservice.exception.BadRequestException;
 import com.gaziyev.microinstaclone.authservice.exception.EmailAlreadyExistsException;
 import com.gaziyev.microinstaclone.authservice.exception.ResourceNotFoundException;
 import com.gaziyev.microinstaclone.authservice.exception.UsernameAlreadyExistsException;
-import com.gaziyev.microinstaclone.authservice.payload.*;
-import com.gaziyev.microinstaclone.authservice.service.JwtTokenProvider;
+import com.gaziyev.microinstaclone.authservice.dto.*;
+import com.gaziyev.microinstaclone.authservice.service.JwtTokenService;
 import com.gaziyev.microinstaclone.authservice.service.UserService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -22,141 +22,166 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
 import java.util.List;
+import java.util.Map;
 
 @Slf4j
 @RestController
 @RequiredArgsConstructor
 public class UserController {
 
-	private final UserService userService;
-	private final AuthenticationManager authenticationManager;
-	private final JwtTokenProvider jwtTokenProvider;
+    private final UserService userService;
+    private final AuthenticationManager authenticationManager;
+    private final JwtTokenService jwtTokenProvider;
 
-	@PostMapping("/sign-in")
-	public ResponseEntity<?> authenticateUser(
-			@Valid @RequestBody LoginRequest loginRequest
-	) {
-		Authentication authentication = authenticationManager.authenticate(
-				new UsernamePasswordAuthenticationToken(
-						loginRequest.getUsername(),
-						loginRequest.getPassword()
-				)
-		);
+    private static final String POST_SIGN_IN = "/auth/sign-in";
+    private static final String POST_REFRESH_TOKEN = "/auth/refresh-token";
+    private static final String POST_SIGN_UP = "/auth/sign-up";
+    private static final String GET_USER_BY_USERNAME = "/users/{username}";
+    private static final String GET_ALL_USERS = "/users/all";
+    private static final String GET_CURRENT_USER = "/users/me";
+    private static final String GET_USER_SUMMARY_BY_USERNAME = "/users/summary/{username}";
+    private static final String POST_FIND_USERS_SUMMARIES_BY_USERNAMES = "/users/summary/in";
+    private static final String PUT_UPLOAD_PROFILE_PICTURE_FOR_CURRENT_USER = "/users/me/pictures";
 
-		SecurityContextHolder.getContext().setAuthentication(authentication);
-		String jwt = jwtTokenProvider.generateToken(authentication);
-		return ResponseEntity.ok(new JwtAuthenticationResponse(jwt));
-	}
+    @PostMapping(POST_SIGN_IN)
+    public ResponseEntity<?> authenticateUser(
+            @Valid @RequestBody LoginRequestDTO loginRequest
+    ) {
 
-	@PostMapping(value = "/users", produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<?> createUser(@Valid @RequestBody SignUpRequest payload) {
-		log.info("createUser: " + payload.getUsername());
+        Authentication authentication = authenticationManager.authenticate(
+                new UsernamePasswordAuthenticationToken(
+                        loginRequest.getUsername(),
+                        loginRequest.getPassword()
+                )
+        );
 
-		User user = User.builder()
-				.username(payload.getUsername())
-				.email(payload.getEmail())
-				.password(payload.getPassword())
-				.userProfile(Profile.builder()
-						             .displayName(payload.getName())
-						             .build())
-				.build();
+        SecurityContextHolder.getContext().setAuthentication(authentication);
+        Map<String, String> jwt = jwtTokenProvider.generateToken(authentication);
+        return ResponseEntity.ok(new JwtAuthenticationResponseDTO(jwt));
+    }
 
-		try {
-			userService.registerUser(user);
-		} catch (UsernameAlreadyExistsException | EmailAlreadyExistsException e) {
-			throw new BadRequestException(e.getMessage());
-		}
+    @PostMapping(POST_REFRESH_TOKEN)
+    public ResponseEntity<?> refreshToken(
+            @Valid @RequestBody RefreshTokenRequestDTO refreshTokenRequest
+    ) {
 
-		URI location = ServletUriComponentsBuilder
-				.fromCurrentContextPath().path("/users/{username}")
-				.buildAndExpand(user.getUsername()).toUri();
+        String token = refreshTokenRequest.getRefreshToken();
+        if (!jwtTokenProvider.validateToken(token)) {
+            throw new BadRequestException("Invalid refresh token");
+        }
 
-		return ResponseEntity
-				.created(location)
-				.body(new ApiResponse(true, "User registered successfully"));
-	}
+        Map<String, String> newJwt = jwtTokenProvider.refreshToken(token);
+        return ResponseEntity.ok(new JwtAuthenticationResponseDTO(newJwt));
+    }
 
-	@PutMapping("/users/me/pictures")
-	@PreAuthorize("hasRole('USER')")
-	public ResponseEntity<?> uploadProfilePicture(
-			@RequestBody String profilePicture,
-			@AuthenticationPrincipal InstaUserDetails instaUserDetails
-	) {
+    @PostMapping(value = POST_SIGN_UP, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<?> createUser(@Valid @RequestBody SignUpRequestDTO payload) {
+        log.info("createUser: " + payload.getUsername());
 
-		userService.updateProfilePicture(profilePicture, instaUserDetails.getId());
+        User user = User.builder()
+                .username(payload.getUsername())
+                .email(payload.getEmail())
+                .password(payload.getPassword())
+                .userProfile(Profile.builder()
+                        .displayName(payload.getName())
+                        .build())
+                .build();
 
-		return ResponseEntity
-				.ok()
-				.body(new ApiResponse(true, "Profile picture updated successfully"));
-	}
+        try {
+            userService.registerUser(user);
+        } catch (UsernameAlreadyExistsException | EmailAlreadyExistsException e) {
+            throw new BadRequestException(e.getMessage());
+        }
 
-	@GetMapping(value = "/users/{username}", produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<?> findUser(@PathVariable String username) {
-		log.info("retrieving user: " + username);
+        URI location = ServletUriComponentsBuilder
+                .fromCurrentContextPath().path("/users/{username}")
+                .buildAndExpand(user.getUsername()).toUri();
 
-		return userService
-				.findUserByUsername(username)
-				.map(user -> ResponseEntity.ok(user))
-				.orElseThrow(() -> new ResourceNotFoundException(username));
-	}
+        return ResponseEntity
+                .created(location)
+                .body(new ApiResponseDTO(true, "User registered successfully"));
+    }
 
-	@GetMapping(value = "/users", produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<?> findAll() {
-		log.info("retrieving all users");
+    @PutMapping(PUT_UPLOAD_PROFILE_PICTURE_FOR_CURRENT_USER)
+    @PreAuthorize("hasRole('USER')")
+    public ResponseEntity<?> uploadProfilePicture(
+            @RequestBody String profilePicture,
+            @AuthenticationPrincipal InstaUserDetails instaUserDetails
+    ) {
 
-		return ResponseEntity
-				.ok(userService.findAll());
-	}
+        userService.updateProfilePicture(profilePicture, instaUserDetails.getId());
 
-	@GetMapping(value = "/users/me", produces = MediaType.APPLICATION_JSON_VALUE)
-	@PreAuthorize("hasRole('USER')")
-	@ResponseStatus(HttpStatus.OK)
-	public UserSummary getCurrentUser(@AuthenticationPrincipal InstaUserDetails instaUserDetails) {
-		return UserSummary.builder()
-				.id(instaUserDetails.getId())
-				.username(instaUserDetails.getUsername())
-				.name(instaUserDetails.getUsername())
-				.profilePicture(instaUserDetails.getUserProfile().getProfilePictureUrl())
-				.build();
-	}
+        return ResponseEntity
+                .ok()
+                .body(new ApiResponseDTO(true, "Profile picture updated successfully"));
+    }
 
-	@GetMapping(value = "/users/summary/{username}", produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<?> getUserSummary(@PathVariable("username") String username) {
-		log.info("retrieving user {}", username);
+    @GetMapping(value = GET_USER_BY_USERNAME, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<?> findUser(@PathVariable String username) {
+        log.info("retrieving user: " + username);
 
-		return  userService
-				.findUserByUsername(username)
-				.map(user -> ResponseEntity.ok(convertTo(user)))
-				.orElseThrow(() -> new ResourceNotFoundException(username));
-	}
+        return userService
+                .findUserByUsername(username)
+                .map(ResponseEntity::ok)
+                .orElseThrow(() -> new ResourceNotFoundException(username));
+    }
 
-	@PostMapping(value = "/users/summary/in", produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<?> getUserSummaries(@RequestBody List<String> usernames) {
-		log.info("retrieving summaries for {} usernames", usernames.size());
+    @GetMapping(value = GET_ALL_USERS, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<?> findAll() {
+        log.info("retrieving all users");
 
-		List<UserSummary> summaries =
-				userService
-						.findByUsernameIn(usernames)
-						.stream()
-						.map(this::convertTo)
-						.toList();
+        return ResponseEntity
+                .ok(userService.findAll());
+    }
 
-		return ResponseEntity.ok(summaries);
-	}
+    @GetMapping(value = GET_CURRENT_USER, produces = MediaType.APPLICATION_JSON_VALUE)
+    @PreAuthorize("hasRole('USER')")
+    @ResponseStatus(HttpStatus.OK)
+    public UserSummaryDTO getCurrentUser(@AuthenticationPrincipal InstaUserDetails instaUserDetails) {
+        return UserSummaryDTO.builder()
+                .id(instaUserDetails.getId())
+                .username(instaUserDetails.getUsername())
+                .name(instaUserDetails.getUsername())
+                .profilePicture(instaUserDetails.getUserProfile().getProfilePictureUrl())
+                .build();
+    }
 
-	private UserSummary convertTo(User user) {
-		return UserSummary
-				.builder()
-				.id(user.getId())
-				.username(user.getUsername())
-				.name(user.getUserProfile().getDisplayName())
-				.profilePicture(user.getUserProfile().getProfilePictureUrl())
-				.build();
-	}
+    @GetMapping(value = GET_USER_SUMMARY_BY_USERNAME, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<?> getUserSummary(@PathVariable("username") String username) {
+        log.info("retrieving user {}", username);
+
+        return userService
+                .findUserByUsername(username)
+                .map(user -> ResponseEntity.ok(convertTo(user)))
+                .orElseThrow(() -> new ResourceNotFoundException(username));
+    }
+
+    @PostMapping(value = POST_FIND_USERS_SUMMARIES_BY_USERNAMES, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<?> getUserSummaries(@RequestBody List<String> usernames) {
+        log.info("retrieving summaries for {} usernames", usernames.size());
+
+        List<UserSummaryDTO> summaries =
+                userService
+                        .findByUsernameIn(usernames)
+                        .stream()
+                        .map(this::convertTo)
+                        .toList();
+
+        return ResponseEntity.ok(summaries);
+    }
+
+    private UserSummaryDTO convertTo(User user) {
+        return UserSummaryDTO
+                .builder()
+                .id(user.getId())
+                .username(user.getUsername())
+                .name(user.getUserProfile().getDisplayName())
+                .profilePicture(user.getUserProfile().getProfilePictureUrl())
+                .build();
+    }
 }

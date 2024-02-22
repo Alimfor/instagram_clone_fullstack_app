@@ -21,53 +21,53 @@ import java.util.Set;
 @Setter
 public class User {
 
-	@Id
-	private String id;
+    @Id
+    private String id;
 
-	@NotBlank
-	@Size(max = 20)
-	private String username;
+    @NotBlank
+    @Size(max = 20)
+    private String username;
 
-	@NotBlank
-	@Size(max = 50)
-	private String password;
+    @NotBlank
+    @Size(max = 50)
+    private String password;
 
-	@NotBlank
-	@Size(max = 50)
-	@Email
-	private String email;
+    @NotBlank
+    @Size(max = 50)
+    @Email
+    private String email;
 
-	@CreatedDate
-	private Instant createdAt;
+    @CreatedDate
+    private Instant createdAt;
 
-	@LastModifiedDate
-	private Instant updatedAt;
+    @LastModifiedDate
+    private Instant updatedAt;
 
-	private boolean active;
-	private Profile userProfile;
-	private Set<Role> roles;
+    private boolean active;
+    private Profile userProfile;
+    private Set<Role> roles;
 
-	public User(User user) {
-		this.id = user.getId();
-		this.username = user.getUsername();
-		this.password = user.getPassword();
-		this.email = user.getEmail();
-		this.createdAt = user.getCreatedAt();
-		this.updatedAt = user.getUpdatedAt();
-		this.active = user.isActive();
-		this.userProfile = user.getUserProfile();
-		this.roles = user.getRoles();
-	}
+    public User(User user) {
+        this.id = user.getId();
+        this.username = user.getUsername();
+        this.password = user.getPassword();
+        this.email = user.getEmail();
+        this.createdAt = user.getCreatedAt();
+        this.updatedAt = user.getUpdatedAt();
+        this.active = user.isActive();
+        this.userProfile = user.getUserProfile();
+        this.roles = user.getRoles();
+    }
 
-	public User(String username, String password, String email) {
-		this.username = username;
-		this.password = password;
-		this.email = email;
-		this.active = true;
-		this.roles = new HashSet<>() {
-			{
-				new Role("USER");
-			}
-		};
-	}
+    public User(String username, String password, String email) {
+        this.username = username;
+        this.password = password;
+        this.email = email;
+        this.active = true;
+        this.roles = new HashSet<>() {
+            {
+                new Role("USER");
+            }
+        };
+    }
 }

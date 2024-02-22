@@ -3,6 +3,7 @@ package com.gaziyev.microinstaclone.graphservice.service;
 import com.gaziyev.microinstaclone.graphservice.entity.Friendship;
 import com.gaziyev.microinstaclone.graphservice.entity.NodeDegree;
 import com.gaziyev.microinstaclone.graphservice.entity.User;
+import com.gaziyev.microinstaclone.graphservice.entity.projection.UserProjection;
 import com.gaziyev.microinstaclone.graphservice.exception.UsernameAlreadyExistsException;
 import com.gaziyev.microinstaclone.graphservice.exception.UsernameNotExistsException;
 import com.gaziyev.microinstaclone.graphservice.payload.PagedResult;
@@ -43,11 +44,18 @@ public class UserService {
 
     public User updateUser(User user) {
         return userRepository.findByUsername(user.getUsername())
-                .map(savedUser -> {
+                .map(projection -> {
+                    User savedUser = User.builder()
+                            .id(projection.getId())
+                            .userId(projection.getUserId())
+                            .username(projection.getUsername())
+                            .name(projection.getName())
+                            .profilePic(projection.getProfilePic())
+                            .build();
+
                     savedUser.setName(user.getName());
                     savedUser.setUsername(user.getUsername());
                     savedUser.setProfilePic(user.getProfilePic());
-
                     savedUser = userRepository.save(savedUser);
                     log.info("User updated: {} successfully", savedUser.getUsername());
 
@@ -62,19 +70,22 @@ public class UserService {
 
         log.info("User {} is following {}", follower.getUsername(), following.getUsername());
 
-        User savedFollower = userRepository
+        UserProjection followerProjection = userRepository
                 .findByUserId(follower.getUserId())
                 .orElseGet(() -> {
                     log.info("user {} not exists, creating it", follower.getUsername());
                     return this.createUser(follower);
                 });
 
-        User savedFollowing = userRepository
+        User savedFollower = toUser(followerProjection);
+
+        UserProjection followingProjection = userRepository
                 .findByUserId(following.getUserId())
                 .orElseGet(() -> {
                     log.info("user {} not exists, creating it", following.getUsername());
                     return this.createUser(following);
                 });
+        User savedFollowing = toUser(followingProjection);
 
         if (savedFollower.getFriendships() == null) {
             savedFollower.setFriendships(new HashSet<>());
@@ -134,6 +145,16 @@ public class UserService {
         log.info("found {} following for user {}", following.size(), followingUsername);
 
         return following;
+    }
+
+    private User toUser(UserProjection userProjection) {
+        return User.builder()
+                .id(userProjection.getId())
+                .userId(userProjection.getUserId())
+                .username(userProjection.getUsername())
+                .name(userProjection.getName())
+                .profilePic(userProjection.getProfilePic())
+                .build();
     }
 
     private PagedResult<User> buildPagedResult(Page<User> page) {

@@ -23,73 +23,72 @@ import java.util.Optional;
 @Transactional(readOnly = true)
 public class UserService {
 
-	private final PasswordEncoder passwordEncoder;
-	private final UserRepository userRepository;
-	private final UserEventSender userEventSender;
+    private final PasswordEncoder passwordEncoder;
+    private final UserRepository userRepository;
+    private final UserEventSender userEventSender;
 
-	public List<User> findAll() {
-		log.info("retrieving all users");
-		return userRepository.findAll();
-	}
+    public List<User> findAll() {
+        log.info("retrieving all users");
+        return userRepository.findAll();
+    }
 
-	public Optional<User> findUserByUsername(String username) {
-		log.info("retrieving user by username: {}", username);
-		return userRepository.findByUsername(username);
-	}
+    public Optional<User> findUserByUsername(String username) {
+        log.info("retrieving user by username: {}", username);
+        return userRepository.findByUsername(username);
+    }
 
-	public List<User> findByUsernameIn(List<String> usernames) {
-		return userRepository.findByUsernameIn(usernames);
-	}
+    public List<User> findByUsernameIn(List<String> usernames) {
+        return userRepository.findByUsernameIn(usernames);
+    }
 
-	@Transactional
-	public User registerUser(User user) {
-		log.info("registering user: {}", user);
+    @Transactional
+    public void registerUser(User user) {
+        log.info("registering user: {}", user);
 
-		if (userRepository.existsByUsername(user.getUsername())) {
-			log.warn("user with username {} already exists", user.getUsername());
-			throw new UsernameAlreadyExistsException(
-					String.format("User with username %s already exists", user.getUsername())
-			);
-		}
+        if (userRepository.existsByUsername(user.getUsername())) {
+            log.warn("user with username {} already exists", user.getUsername());
+            throw new UsernameAlreadyExistsException(
+                    String.format("User with username %s already exists", user.getUsername())
+            );
+        }
 
-		if (userRepository.existsByEmail(user.getEmail())) {
-			log.warn("user with email {} already exists", user.getEmail());
-			throw new EmailAlreadyExistsException(
-					String.format("User with email %s already exists", user.getEmail())
-			);
-		}
+        if (userRepository.existsByEmail(user.getEmail())) {
+            log.warn("user with email {} already exists", user.getEmail());
+            throw new EmailAlreadyExistsException(
+                    String.format("User with email %s already exists", user.getEmail())
+            );
+        }
 
-		user.setActive(true);
-		user.setPassword(passwordEncoder.encode(user.getPassword()));
-		user.setRoles(new HashSet<>() {
-			{
-				add(Role.USER);
-			}
-		});
+        user.setActive(true);
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
+        user.setRoles(new HashSet<>() {
+            {
+                add(Role.USER);
+            }
+        });
 
-		User savedUser = userRepository.save(user);
-		userEventSender.sendUserCreated(savedUser);
-		return savedUser;
-	}
+        User savedUser = userRepository.save(user);
+        userEventSender.sendUserCreated(savedUser);
+    }
 
-	@Transactional
-	public User updateProfilePicture(String uri, String id) {
-		log.info("updating profile picture {} for user with id: {}", uri, id);
+    @Transactional
+    public void updateProfilePicture(String uri, String id) {
+        log.info("updating profile picture {} for user with id: {}", uri, id);
 
-		return userRepository
-				.findById(id)
-				.map(user -> {
-					String oldProfilePicture = user.getUserProfile().getProfilePictureUrl();
-					user.getUserProfile().setProfilePictureUrl(uri);
-					User savedUser = userRepository.save(user);
+        userRepository
+                .findById(id)
+                .map(user -> {
+                    String oldProfilePicture = user.getUserProfile().getProfilePictureUrl();
+                    user.getUserProfile().setProfilePictureUrl(uri);
+                    User savedUser = userRepository.save(user);
 
-					userEventSender.sendUserUpdated(savedUser, oldProfilePicture);
+                    userEventSender.sendUserUpdated(savedUser, oldProfilePicture);
 
-					return savedUser;
-				})
-				.orElseThrow(() ->
-						             new ResourceNotFoundException(
-								             String.format("User with id %s not found", id)
-						             ));
-	}
+                    return savedUser;
+                })
+                .orElseThrow(() ->
+                        new ResourceNotFoundException(
+                                String.format("User with id %s not found", id)
+                        ));
+    }
 }

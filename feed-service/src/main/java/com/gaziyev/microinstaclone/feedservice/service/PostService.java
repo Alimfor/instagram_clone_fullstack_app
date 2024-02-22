@@ -2,7 +2,7 @@ package com.gaziyev.microinstaclone.feedservice.service;
 
 import com.gaziyev.microinstaclone.feedservice.client.PostServiceClient;
 import com.gaziyev.microinstaclone.feedservice.configuration.JwtConfig;
-import com.gaziyev.microinstaclone.feedservice.dto.Post;
+import com.gaziyev.microinstaclone.feedservice.payload.Post;
 import com.gaziyev.microinstaclone.feedservice.exception.UnableToGetPostsException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

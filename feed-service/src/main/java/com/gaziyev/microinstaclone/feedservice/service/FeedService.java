@@ -1,18 +1,15 @@
 package com.gaziyev.microinstaclone.feedservice.service;
 
-import com.gaziyev.microinstaclone.feedservice.dto.Post;
+import com.gaziyev.microinstaclone.feedservice.payload.Post;
 import com.gaziyev.microinstaclone.feedservice.entity.UserFeed;
 import com.gaziyev.microinstaclone.feedservice.exception.ResourceNotFoundException;
-import com.gaziyev.microinstaclone.feedservice.payload.SliceResult;
-import com.gaziyev.microinstaclone.feedservice.repository.FeedRepository;
+import com.gaziyev.microinstaclone.feedservice.dto.SliceResultDTO;
 import com.gaziyev.microinstaclone.feedservice.util.AppConstants;
 import com.gaziyev.microinstaclone.feedservice.util.InstantDateTypeAdapter;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Slice;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 
@@ -24,12 +21,11 @@ import java.util.*;
 @RequiredArgsConstructor
 public class FeedService {
 
-    private final FeedRepository feedRepository;
     private final AuthService authService;
     private final PostService postService;
     private final RedisTemplate<String, String> redisTemplate;
 
-    public SliceResult<Post> getUserFeed(String username, Optional<String> pagingState) {
+    public SliceResultDTO<Post> getUserFeed(String username, Optional<String> pagingState) {
 
         log.info("Fetching feed for user {}. Is first page? {}", username, pagingState.isEmpty());
 
@@ -65,7 +61,7 @@ public class FeedService {
             pageState = String.valueOf(startIndex + pageSize);
         }
 
-        return SliceResult
+        return SliceResultDTO
                 .<Post>builder()
                 .content(posts)
                 .isLastPage(pageState == null)

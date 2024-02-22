@@ -1,7 +1,7 @@
 package com.gaziyev.microinstaclone.feedservice.controller;
 
-import com.gaziyev.microinstaclone.feedservice.dto.Post;
-import com.gaziyev.microinstaclone.feedservice.payload.SliceResult;
+import com.gaziyev.microinstaclone.feedservice.payload.Post;
+import com.gaziyev.microinstaclone.feedservice.dto.SliceResultDTO;
 import com.gaziyev.microinstaclone.feedservice.service.FeedService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -22,7 +22,7 @@ public class FeedController {
     private static final String GET_FEED_BY_USERNAME = "/feed/{username}";
 
     @GetMapping(GET_FEED_BY_USERNAME)
-    public ResponseEntity<SliceResult<Post>> getFeedByUsername(
+    public ResponseEntity<SliceResultDTO<Post>> getFeedByUsername(
             @PathVariable String username,
             @RequestParam(value = "ps", required = false) Optional<String> pagingState
     ) {

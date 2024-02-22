@@ -1,21 +1,18 @@
 package com.gaziyev.microinstaclone.feedservice.service;
 
-import com.fasterxml.jackson.datatype.jsr310.ser.InstantSerializer;
 import com.gaziyev.microinstaclone.feedservice.client.GraphServiceClient;
 import com.gaziyev.microinstaclone.feedservice.configuration.JwtConfig;
-import com.gaziyev.microinstaclone.feedservice.dto.Post;
-import com.gaziyev.microinstaclone.feedservice.dto.User;
+import com.gaziyev.microinstaclone.feedservice.payload.Post;
+import com.gaziyev.microinstaclone.feedservice.payload.User;
 import com.gaziyev.microinstaclone.feedservice.entity.UserFeed;
 import com.gaziyev.microinstaclone.feedservice.exception.UnableToGetFollowersException;
-import com.gaziyev.microinstaclone.feedservice.payload.PagedResult;
-import com.gaziyev.microinstaclone.feedservice.repository.FeedRepository;
+import com.gaziyev.microinstaclone.feedservice.dto.PagedResultDTO;
 import com.gaziyev.microinstaclone.feedservice.util.AppConstants;
 import com.gaziyev.microinstaclone.feedservice.util.InstantDateTypeAdapter;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.redis.core.HashOperations;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -31,7 +28,6 @@ public class FeedGeneratorService {
     private final GraphServiceClient graphServiceClient;
     private final AuthService authService;
     private final JwtConfig jwtConfig;
-    private final FeedRepository feedRepository;
     private final RedisTemplate<String, String> redisTemplate;
 
     public void addToFeed(Post post) {
@@ -54,7 +50,7 @@ public class FeedGeneratorService {
 
         while (!isLast) {
 
-            ResponseEntity<PagedResult<User>> response =
+            ResponseEntity<PagedResultDTO<User>> response =
                     graphServiceClient.findFollowers(
                             jwtConfig.getPrefix() + getAccessToken(),
                             post.getUsername(), page, size
@@ -68,7 +64,7 @@ public class FeedGeneratorService {
                 throw new UnableToGetFollowersException(message);
             }
 
-            PagedResult<User> result = Objects.requireNonNull(response.getBody());
+            PagedResultDTO<User> result = Objects.requireNonNull(response.getBody());
 
             log.info("found {} followers for user: {}, page {}",
                     result.getContents().size(), post.getUsername(), page);

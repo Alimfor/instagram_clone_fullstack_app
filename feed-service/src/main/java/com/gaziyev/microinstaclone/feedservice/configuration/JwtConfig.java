@@ -12,10 +12,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class JwtConfig {
 
-    @Value("${security.jwt.uri:/auth/**}")
-    private String uri;
-
-    @Value("${security.jwt.header:Authorization}")
+    @Value("${security.jwt.header}")
     private String header;
 
     @Value("${security.jwt.prefix:Bearer}")

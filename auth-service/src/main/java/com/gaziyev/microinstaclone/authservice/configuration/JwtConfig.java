@@ -10,24 +10,21 @@ import org.springframework.stereotype.Component;
 @Component
 public class JwtConfig {
 
-	@Value("${security.jwt.uri:/auth/**}")
-	private String uri;
+    @Value("${security.jwt.header}")
+    private String header;
 
-	@Value("${security.jwt.header:Authorization}")
-	private String header;
+    @Value("${security.jwt.prefix}")
+    private String prefix;
 
-	@Value("${security.jwt.prefix}")
-	private String prefix;
+    @Value("${security.jwt.subject}")
+    private String subject;
 
-	@Value("${security.jwt.subject}")
-	private String subject;
+    @Value("${security.jwt.issuer}")
+    private String issuer;
 
-	@Value("${security.jwt.issuer:auth-service}")
-	private String issuer;
+    @Value("${security.jwt.expiration}")
+    private int expiration;
 
-	@Value("${security.jwt.expiration:#{24*60*60}}")
-	private int expiration;
-
-	@Value("${security.jwt.secret:JwtSecretKey}")
-	private String secret;
+    @Value("${security.jwt.secret}")
+    private String secret;
 }

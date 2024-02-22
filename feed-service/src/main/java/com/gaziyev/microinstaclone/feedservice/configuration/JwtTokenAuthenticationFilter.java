@@ -31,7 +31,7 @@ public class JwtTokenAuthenticationFilter extends OncePerRequestFilter {
 
         String token = header.substring(7);
 
-        try{
+        try {
 
             DecodedJWT jwt = JWT.decode(token);
 

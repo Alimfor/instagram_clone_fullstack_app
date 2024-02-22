@@ -1,8 +1,8 @@
 package com.gaziyev.microinstaclone.feedservice.function;
 
-import com.gaziyev.microinstaclone.feedservice.dto.Post;
+import com.gaziyev.microinstaclone.feedservice.payload.Post;
 import com.gaziyev.microinstaclone.feedservice.messaging.PostEventType;
-import com.gaziyev.microinstaclone.feedservice.payload.PostEvenPayload;
+import com.gaziyev.microinstaclone.feedservice.dto.PostEvenPayloadDTO;
 import com.gaziyev.microinstaclone.feedservice.service.FeedGeneratorService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -22,7 +22,7 @@ public class PostEventFunction {
     private final FeedGeneratorService feedGeneratorService;
 
     @Bean
-    public Consumer<Message<PostEvenPayload>> receivePostChangedEvent() {
+    public Consumer<Message<PostEvenPayloadDTO>> receivePostChangedEvent() {
         return payloadMessage -> {
 
             PostEventType eventType = payloadMessage.getPayload().getEventType();
@@ -47,10 +47,11 @@ public class PostEventFunction {
         };
     }
 
-    private Post convertTo(PostEvenPayload payload) {
+    private Post convertTo(PostEvenPayloadDTO payload) {
         return Post.builder()
                 .id(payload.getId())
                 .username(payload.getUsername())
+                .imageUrl(payload.getImageUrl())
                 .createdAt(payload.getCreatedAt())
                 .build();
     }

@@ -2,7 +2,7 @@ package com.gaziyev.microinstaclone.graphservice.function;
 
 import com.gaziyev.microinstaclone.graphservice.entity.User;
 import com.gaziyev.microinstaclone.graphservice.messaging.UserEventType;
-import com.gaziyev.microinstaclone.graphservice.payload.UserEventPayload;
+import com.gaziyev.microinstaclone.graphservice.dto.UserEventPayloadDTO;
 import com.gaziyev.microinstaclone.graphservice.service.UserService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Bean;
@@ -18,7 +18,7 @@ import java.util.function.Consumer;
 public class GraphFunctions {
 
     @Bean
-    public Consumer<Message<UserEventPayload>> sentUserChangedEvent(UserService userService) {
+    public Consumer<Message<UserEventPayloadDTO>> sentUserChangedEvent(UserService userService) {
         return userEventPayload -> {
             UserEventType eventType = userEventPayload.getPayload().getEventType();
 
@@ -42,7 +42,7 @@ public class GraphFunctions {
         };
     }
 
-    private User convertTo(UserEventPayload payload) {
+    private User convertTo(UserEventPayloadDTO payload) {
         return User.builder()
                 .userId(payload.getId())
                 .username(payload.getUsername())

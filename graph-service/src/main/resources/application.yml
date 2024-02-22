@@ -1,41 +1,10 @@
-server:
-  port: 8082
-
 spring:
   application:
     name: graph-service
-  neo4j:
-    uri: bolt://localhost:7687
-    authentication:
-      username: neo4j
-      password: 123123123
+  profiles:
+    active: jwt, kafka
+  config:
+    import: optional:configserver:http://localhost:8888/
   cloud:
-    function:
-      definition: sentUserChangedEvent
-    stream:
-      kafka:
-        binder:
-          brokers:
-            - localhost:9092
-          configuration:
-            key:
-              deserializer: org.apache.kafka.common.serialization.StringDeserializer
-      bindings:
-        sentUserChangedEvent-in-0:
-          destination: send-user-changed-event
-          group: ${spring.application.name}
-          content-type: application/json
-
-eureka:
-  client:
-    service-url:
-      default-zone: http://localhost:8761/eureka
-
-security:
-  jwt:
-    uri: /auth/**
-    header: Authorization
-    prefix: 'Bearer '
-    expiration: 86400
-    secret: YmFkLXBhc3N3b3JkYmFkLXBhc3N3b3JkYmFkLXBhc3N3b3Jk
-
+    config:
+      fail-fast: true
