@@ -46,6 +46,19 @@ services:
       KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
       KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
 
+  post-service:
+    build:
+      context: .\laravel-post-service\post-service\
+      dockerfile: Dockerfile
+    ports:
+      - 8000:8000
+    volumes:
+      - D:\Backend\php\post-service:/app
+    command: 'php artisan serve --host=0.0.0.0'
+    links:
+      - kafka
+      - redis
+
   mongo-express:
     image: mongo-express
     container_name: mongo_express
