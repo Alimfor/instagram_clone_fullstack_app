@@ -1,4 +1,4 @@
-/post-service/
+post-service/
 
 /target/
 !.mvn/wrapper/maven-wrapper.jar
