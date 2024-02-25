@@ -46,7 +46,7 @@ public class UserController {
     private static final String GET_CURRENT_USER = "/users/me";
     private static final String GET_USER_SUMMARY_BY_USERNAME = "/users/summary/{username}";
     private static final String POST_FIND_USERS_SUMMARIES_BY_USERNAMES = "/users/summary/in";
-    private static final String PUT_UPLOAD_PROFILE_PICTURE_FOR_CURRENT_USER = "/users/me/pictures";
+    private static final String PUT_UPLOAD_PROFILE_PICTURE_FOR_CURRENT_USER = "/users/me/picture";
 
     @PostMapping(POST_SIGN_IN)
     public ResponseEntity<?> authenticateUser(
@@ -71,7 +71,7 @@ public class UserController {
     ) {
 
         String token = refreshTokenRequest.getRefreshToken();
-        if (!jwtTokenProvider.validateToken(token)) {
+        if (!jwtTokenProvider.validateToken(token, true)) {
             throw new BadRequestException("Invalid refresh token");
         }
 

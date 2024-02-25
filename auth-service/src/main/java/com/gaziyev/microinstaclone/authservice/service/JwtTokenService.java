@@ -65,7 +65,7 @@ public class JwtTokenService {
         );
     }
 
-    public boolean validateToken(String token) throws JWTVerificationException {
+    public boolean validateToken(String token, boolean isForRefresh) throws JWTVerificationException {
         try {
             JWTVerifier verifier = JWT.require(Algorithm.HMAC256(jwtConfig.getSecret()))
                     .withSubject(jwtConfig.getSubject())
@@ -74,7 +74,7 @@ public class JwtTokenService {
             DecodedJWT jwt = verifier.verify(token);
             boolean tokenType = jwt.getClaim("isRefreshToken").asBoolean();
 
-            if (!tokenType) {
+            if (isForRefresh && !tokenType) {
                 log.error("Prohibited from sending access token. Should by refresh token");
                 return false;
             }
