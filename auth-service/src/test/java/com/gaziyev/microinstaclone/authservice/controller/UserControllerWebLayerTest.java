@@ -24,8 +24,6 @@ import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilde
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -40,6 +38,8 @@ import static org.mockito.Mockito.*;
 )
 @AutoConfigureDataMongo
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
+@Order(4)
+@DisplayName("User Controller Web Layer Test")
 public class UserControllerWebLayerTest {
 
     @Autowired
@@ -88,7 +88,7 @@ public class UserControllerWebLayerTest {
     @Test
     @Order(6)
     @DisplayName("Trying to obtain user by username")
-    void testFindUser_givenUsernameFromPath_whenUsernameIsExists_thenReturnFoundUser() throws Exception {
+    void testFindUser_givenUsernameFromPath_whenUserFound_thenReturnUser() throws Exception {
         String username = "alimzhan";
         User user = UserData.getUsers(null, username).get(0);
 
@@ -105,7 +105,7 @@ public class UserControllerWebLayerTest {
     @Test
     @Order(7)
     @DisplayName("Trying to catch ResourceNotFountException from findUser")
-    void testFindUser_givenStrangeUsernameFromPath_whenUsernameIsNotExists_thenThrowResourceNotFountException() throws Exception {
+    void testFindUser_givenStrangeUsernameFromPath_whenUsernameNotFound_thenThrowResourceNotFountException() throws Exception {
 
         String username = "alex";
 
@@ -128,7 +128,7 @@ public class UserControllerWebLayerTest {
     @Test
     @Order(8)
     @DisplayName("Trying to obtain user summary")
-    void testGetUserSummary_givenUsernameFromPath_whenUsernameIsExists_thenReturnUserSummary() throws Exception {
+    void testGetUserSummary_givenUsernameFromPath_whenUsernameFound_thenReturnUserSummary() throws Exception {
 
         String username = "alimzhan";
         User user = UserData.getUsers(null, username).get(0);
@@ -156,7 +156,7 @@ public class UserControllerWebLayerTest {
     @Test
     @Order(9)
     @DisplayName("Trying to catch ResourceNotFountException from getUserSummary")
-    void testGetUserSummary_givenStrangeUsernameFromPath_whenUsernameIsNotExists_thenThrowResourceNotFountException() throws Exception {
+    void testGetUserSummary_givenStrangeUsernameFromPath_whenUsernameNotFound_thenThrowResourceNotFountException() throws Exception {
 
         String username = "alex";
 
@@ -179,7 +179,7 @@ public class UserControllerWebLayerTest {
     @Test
     @Order(10)
     @DisplayName("Trying to obtain user summaries")
-    void testGetUserSummaries_givenUsernames_whenUsernameIsExists_thenReturnUserSummaries() throws Exception {
+    void testGetUserSummaries_givenUsernames_whenUsernameFound_thenReturnUserSummaries() throws Exception {
 
         String username = "alimzhan";
 
