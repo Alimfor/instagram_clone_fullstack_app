@@ -40,7 +40,7 @@ public class InstaUserDetailsServiceTest {
     @Test
     @Order(1)
     @DisplayName("Trying to obtain user by username")
-    void testLoadUserByUsername_givenUsername_whenFindByUsername_thenReturnInstaUserDetails() {
+    void testLoadUserByUsername_givenUsername_whenUsernameIsExists_thenConvertToUserDetailsAndReturn() {
 
         User user = User.builder()
                 .username(username)
@@ -80,7 +80,7 @@ public class InstaUserDetailsServiceTest {
     @Test
     @Order(2)
     @DisplayName("Trying to catch UsernameNotFoundException")
-    void testLoadUserByUsername_givenUsername_whenFindByUsername_thenThrowUsernameNotFoundException() {
+    void testLoadUserByUsername_givenUsername_whenUsernameIsNotExists_thenThrowUsernameNotFoundException() {
 
         String expectedThrownMessage = "User not found";
         when(userRepository.findByUsername(username))

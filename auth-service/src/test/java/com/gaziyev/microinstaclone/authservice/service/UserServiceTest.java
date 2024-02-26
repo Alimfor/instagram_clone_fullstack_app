@@ -8,6 +8,7 @@ import com.gaziyev.microinstaclone.authservice.exception.ResourceNotFoundExcepti
 import com.gaziyev.microinstaclone.authservice.exception.UsernameAlreadyExistsException;
 import com.gaziyev.microinstaclone.authservice.messaging.UserEventSender;
 import com.gaziyev.microinstaclone.authservice.repository.UserRepository;
+import com.gaziyev.microinstaclone.authservice.util.UserData;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -67,9 +68,9 @@ class UserServiceTest {
     @Test
     @Order(1)
     @DisplayName("Trying to obtain all users")
-    void whenFindAll_thenReturnUserList() {
+    void testFindAll_whenCallFindAll_thenReturnUserList() {
 
-        when(userRepository.findAll()).thenReturn(getUsers());
+        when(userRepository.findAll()).thenReturn(UserData.getUsers(user, otherUserName));
 
         userService.findAll();
         verify(userRepository).findAll();
@@ -79,7 +80,7 @@ class UserServiceTest {
     @Test
     @Order(2)
     @DisplayName("Trying to obtain user by username")
-    void whenFindUserByUsername_thenReturnUser() {
+    void testFindByUsername_givenUsername_whenUsernameIsExists_thenReturnFoundUser() {
 
         when(userRepository.findByUsername(user.getUsername())).thenReturn(
                 Optional.of(user));
@@ -91,12 +92,12 @@ class UserServiceTest {
     @Test
     @Order(3)
     @DisplayName("Trying to obtain user list by usernames")
-    void whenFindByUsernameIn_thenReturnUserList() {
+    void testFindUsernameIn_givenUsernameList_whenUsernamesAreExists_thenReturnFoundUserList() {
 
         when(userRepository.findByUsernameIn(
                         List.of(user.getUsername(), otherUserName)
                 )
-        ).thenReturn(getUsers());
+        ).thenReturn(UserData.getUsers(user, otherUserName));
 
         userService.findByUsernameIn(List.of(user.getUsername(), otherUserName));
 
@@ -108,7 +109,7 @@ class UserServiceTest {
     @Test
     @Order(4)
     @DisplayName("Trying to register user")
-    void givenUser_whenRegisterUser_thenPassSuccess() {
+    void testRegisterUser_givenUser_whenUserIsValid_thenSaveUserAndReturnNothing() {
 
         when(userRepository.existsByUsername(user.getUsername()))
                 .thenReturn(false);
@@ -131,7 +132,7 @@ class UserServiceTest {
     @Test
     @Order(5)
     @DisplayName("Trying to catch UsernameAlreadyExistsException")
-    void givenUserAndSameUsername_whenToCallExistsByUsername_thenThrowUsernameAlreadyExistsException() {
+    void testRegisterUser_givenUserWithSameUsername_whenUsernameIsExists_thenThrowUsernameAlreadyExistsException() {
 
         when(userRepository.existsByUsername(user.getUsername()))
                 .thenReturn(true);
@@ -150,7 +151,7 @@ class UserServiceTest {
     @Test
     @Order(6)
     @DisplayName("Trying to catch EmailAlreadyExistsException")
-    void givenUserAndSameUsername_whenToCallExistsByEmail_thenThrowEmailAlreadyExistsException() {
+    void testRegisterUser_givenUserWithSameEmail_whenEmailIsExists_thenThrowEmailAlreadyExistsException() {
 
         when(userRepository.existsByUsername(user.getUsername()))
                 .thenReturn(false);
@@ -171,7 +172,7 @@ class UserServiceTest {
     @Test
     @Order(7)
     @DisplayName("Trying to update profile picture")
-    void givenUriAndUserId_whenUpdateProfilePicture_thenPassSuccess() {
+    void testUploadProfilePicture_givenUriAndUserId_whenIdIsExists_thenUpdateProfilePictureUrlAndReturnNothing() {
 
         when(userRepository.findById(user.getId()))
                 .thenReturn(Optional.of(user));
@@ -190,7 +191,7 @@ class UserServiceTest {
     @Test
     @Order(8)
     @DisplayName("Trying to catch ResourceNotFoundException if user not fount by id")
-    void givenUriAndUserId_whenToCallFindById_thenThrowResourceNotFoundException() {
+    void testUpdateProfilePicture_givenUriAndUserId_whenIdIsNotExists_thenThrowResourceNotFoundException() {
 
         when(userRepository.findById(user.getId()))
                 .thenReturn(Optional.empty());
@@ -203,25 +204,5 @@ class UserServiceTest {
         verify(userRepository).findById(user.getId());
         verify(userRepository, never()).save(user);
         verify(userEventSender, never()).sendUserUpdated(user, null);
-    }
-
-    private List<User> getUsers() {
-
-        return List.of(user, User.builder()
-                .username(otherUserName)
-                .password("password")
-                .email("temp@gmail.com")
-                .active(true)
-                .userProfile(Profile.builder()
-                        .displayName("username")
-                        .profilePictureUrl("temp.jpg")
-                        .birthday(new Date())
-                        .build())
-                .roles(new HashSet<>() {
-                    {
-                        add(Role.USER);
-                    }
-                })
-                .build());
     }
 }

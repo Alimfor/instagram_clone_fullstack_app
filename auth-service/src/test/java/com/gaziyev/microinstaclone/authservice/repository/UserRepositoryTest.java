@@ -30,7 +30,7 @@ class UserRepositoryTest {
 	@Test
 	@Order(1)
 	@DisplayName("Trying to save user object")
-	void givenUserObject_whenSave_thenReturnSavedUser() {
+	void testSave_givenUser_whenUserSaved_thenReturnSavedUser() {
 
 		User user = User.builder()
 				.username("username")
@@ -61,7 +61,7 @@ class UserRepositoryTest {
 	@Test
 	@Order(2)
 	@DisplayName("Trying to obtain user by username")
-	void givenUsername_whenFindByUsername_thenReturnUser() {
+	void testFindByUsername_givenUsername_whenUsernameIsExists_thenReturnFoundUserInsideOptional() {
 
 		Optional<User> foundUser = repository.findByUsername(username);
 
@@ -71,8 +71,18 @@ class UserRepositoryTest {
 
 	@Test
 	@Order(3)
+	@DisplayName("Make sure that the user with the given username is not exists")
+	void testExistsByUsername_givenUsername_whenUsernameIsNotExists_thenReturnFalse() {
+
+		boolean exists = repository.existsByUsername(username + "shouldFalse");
+
+		assertThat(exists).isFalse();
+	}
+
+	@Test
+	@Order(4)
 	@DisplayName("Make sure that the user with the given username exists")
-	void givenUsername_whenExistsByUsername_thenReturnTrue() {
+	void testExistsByUsername_givenUsername_whenUsernameIsExists_thenReturnTrue() {
 
 		boolean exists = repository.existsByUsername(username);
 
@@ -80,9 +90,9 @@ class UserRepositoryTest {
 	}
 
 	@Test
-	@Order(4)
+	@Order(5)
 	@DisplayName("Make sure that the user with the given email exists")
-	void givenEmail_whenExistsByEmail_thenReturnTrue() {
+	void testExistsByEmail_givenEmail_whenEmailIsExists_thenReturnTrue() {
 
 		boolean exists = repository.existsByEmail(email);
 
@@ -90,9 +100,19 @@ class UserRepositoryTest {
 	}
 
 	@Test
-	@Order(5)
+	@Order(6)
+	@DisplayName("Make sure that the user with the given email is not exists")
+	void testExistsByEmail_givenEmail_whenEmailIsNotExists_thenReturnFalse() {
+
+		boolean exists = repository.existsByEmail( "shouldFalse" + email);
+
+		assertThat(exists).isFalse();
+	}
+
+	@Test
+	@Order(7)
 	@DisplayName("Trying to obtain user list by usernames")
-	void givenUsernames_whenFindByUsernameIn_thenReturnUserList() {
+	void testFindByUsernameIn_givenUsernameList_whenUsernamesAreExists_thenReturnUserList() {
 
 		List<User> foundUsers = repository.findByUsernameIn(List.of(username));
 
@@ -101,9 +121,9 @@ class UserRepositoryTest {
 	}
 
 	@Test
-	@Order(6)
+	@Order(8)
 	@DisplayName("Trying to update user")
-	void givenUser_whenUpdate_thenReturnUpdatedUser() {
+	void testSave_givenUsername_whenUpdatedFoundUserAndSaved_thenReturnUpdatedUser() {
 
 		final String newEmail = "new@gmail.com";
 		Optional<User> foundUser = repository.findByUsername(username);
@@ -116,9 +136,9 @@ class UserRepositoryTest {
 	}
 
 	@Test
-	@Order(7)
+	@Order(9)
 	@DisplayName("Trying to delete user")
-	void givenUserId_whenDeleteById_thenReturnNothing() {
+	void testDeleteById_givenUserId_whenUserIsDeleted_thenVerifyByExistsById() {
 
 		repository.deleteById(user_id);
 		boolean isExists = repository.existsById(user_id);
