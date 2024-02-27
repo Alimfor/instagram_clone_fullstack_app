@@ -1,7 +1,6 @@
 package com.gaziyev.microinstaclone.graphservice.repository;
 
 import com.gaziyev.microinstaclone.graphservice.entity.User;
-import com.gaziyev.microinstaclone.graphservice.entity.projection.UserProjection;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.neo4j.repository.Neo4jRepository;
@@ -16,11 +15,18 @@ public interface UserRepository extends Neo4jRepository<User, Long> {
 
 
     @Query("""
+            MATCH (follower:User {userId: $user1Id}), (following:User {userId: $user2Id})
+            MERGE (follower)-[r:IS_FOLLOWING]->(following)
+            """)
+    void follow(String user1Id, String user2Id);
+
+    @Query("""
             MATCH (u:User {userId: $userId})
             RETURN u.userId as userId, u.username as username, u.name as name, u.profilePic as profilePic
+            LIMIT 1
             """)
-    Optional<UserProjection> findByUserId(String userId);
-    Optional<UserProjection> findByUsername(String username);
+    Optional<User> findByUserId(String userId);
+    Optional<User> findByUsername(String username);
 
     @Query("MATCH (n)-[r]->() where n.username=$username RETURN COUNT(r)")
     long findOutDegree(String username);
@@ -28,7 +34,11 @@ public interface UserRepository extends Neo4jRepository<User, Long> {
     @Query("MATCH (n)<-[r]-() where n.username=$username RETURN COUNT(r)")
     long findInDegree(String username);
 
-    @Query("MATCH (n1:User{ username:$username1 }), (n2:User{username:$username2 }) RETURN EXISTS((n1)-[:IS_FOLLOWING]->(n2))")
+    @Query("""
+            RETURN EXISTS(
+                (:User {username: $username1})-[:IS_FOLLOWING]->(:User {username: $username2})
+            )
+            """)
     boolean isFollowing(String username1, String username2);
 
     @Query("MATCH (n:User{username:$username})<--(f:User) RETURN f")

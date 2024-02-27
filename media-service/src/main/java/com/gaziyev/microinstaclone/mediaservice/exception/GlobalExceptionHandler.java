@@ -34,7 +34,7 @@ public class GlobalExceptionHandler {
 
     private ResponseEntity<Map<String,String>> handleCustomException(String message, HttpStatus status) {
         Map<String, String> errorMap = new HashMap<>();
-        errorMap.put("message", ex.getMessage());
+        errorMap.put("message", message);
         return new ResponseEntity<>(errorMap, new HttpHeaders(), status);
     }
 }

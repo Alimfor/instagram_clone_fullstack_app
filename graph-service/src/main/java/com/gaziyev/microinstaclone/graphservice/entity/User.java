@@ -1,6 +1,5 @@
 package com.gaziyev.microinstaclone.graphservice.entity;
 
-import com.gaziyev.microinstaclone.graphservice.entity.projection.UserProjection;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
@@ -15,7 +14,7 @@ import java.util.Set;
 @Setter
 @Builder
 @Node("User")
-public class User implements UserProjection {
+public class User {
 
     @Id
     @GeneratedValue

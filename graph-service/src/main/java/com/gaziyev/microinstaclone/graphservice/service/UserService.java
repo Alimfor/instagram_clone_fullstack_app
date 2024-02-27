@@ -1,9 +1,7 @@
 package com.gaziyev.microinstaclone.graphservice.service;
 
-import com.gaziyev.microinstaclone.graphservice.entity.Friendship;
 import com.gaziyev.microinstaclone.graphservice.entity.NodeDegree;
 import com.gaziyev.microinstaclone.graphservice.entity.User;
-import com.gaziyev.microinstaclone.graphservice.entity.projection.UserProjection;
 import com.gaziyev.microinstaclone.graphservice.exception.UsernameAlreadyExistsException;
 import com.gaziyev.microinstaclone.graphservice.exception.UsernameNotExistsException;
 import com.gaziyev.microinstaclone.graphservice.payload.PagedResult;
@@ -16,7 +14,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.HashSet;
 import java.util.List;
 
 @Service
@@ -66,39 +63,26 @@ public class UserService {
                 ));
     }
 
-    public User follow(User follower, User following) {
+    public void follow(User follower, User following) {
 
         log.info("User {} is following {}", follower.getUsername(), following.getUsername());
 
-        UserProjection followerProjection = userRepository
+        User savedFollower = userRepository
                 .findByUserId(follower.getUserId())
                 .orElseGet(() -> {
                     log.info("user {} not exists, creating it", follower.getUsername());
                     return this.createUser(follower);
                 });
 
-        User savedFollower = toUser(followerProjection);
-
-        UserProjection followingProjection = userRepository
+        User savedFollowing = userRepository
                 .findByUserId(following.getUserId())
                 .orElseGet(() -> {
                     log.info("user {} not exists, creating it", following.getUsername());
                     return this.createUser(following);
                 });
-        User savedFollowing = toUser(followingProjection);
 
-        if (savedFollower.getFriendships() == null) {
-            savedFollower.setFriendships(new HashSet<>());
-        }
 
-        savedFollower
-                .getFriendships()
-                .add(Friendship.builder()
-                        .targetUser(savedFollowing)
-                        .build()
-                );
-
-        return userRepository.save(savedFollower);
+        userRepository.follow(savedFollower.getUserId(), savedFollowing.getUserId());
     }
 
     public NodeDegree findNodeDegree(String username) {
@@ -145,16 +129,6 @@ public class UserService {
         log.info("found {} following for user {}", following.size(), followingUsername);
 
         return following;
-    }
-
-    private User toUser(UserProjection userProjection) {
-        return User.builder()
-                .id(userProjection.getId())
-                .userId(userProjection.getUserId())
-                .username(userProjection.getUsername())
-                .name(userProjection.getName())
-                .profilePic(userProjection.getProfilePic())
-                .build();
     }
 
     private PagedResult<User> buildPagedResult(Page<User> page) {
