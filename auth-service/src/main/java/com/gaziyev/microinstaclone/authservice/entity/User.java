@@ -16,7 +16,6 @@ import java.util.Set;
 @Document
 @Builder
 @ToString
-@EqualsAndHashCode
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter

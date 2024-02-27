@@ -7,8 +7,8 @@ import com.gaziyev.microinstaclone.authservice.exception.ResourceNotFoundExcepti
 import com.gaziyev.microinstaclone.authservice.exception.UsernameAlreadyExistsException;
 import com.gaziyev.microinstaclone.authservice.messaging.UserEventSender;
 import com.gaziyev.microinstaclone.authservice.repository.UserRepository;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -19,13 +19,24 @@ import java.util.Optional;
 
 @Service
 @Slf4j
-@RequiredArgsConstructor
 @Transactional(readOnly = true)
 public class UserService {
 
     private final PasswordEncoder passwordEncoder;
     private final UserRepository userRepository;
     private final UserEventSender userEventSender;
+
+    private final String DEFAULT_PROFILE_PIC;
+
+    public UserService(@Value("${default.values.profile-picture-url}") String DEFAULT_PROFILE_PIC,
+                       PasswordEncoder passwordEncoder, UserRepository userRepository,
+                       UserEventSender userEventSender) {
+        this.passwordEncoder = passwordEncoder;
+        this.userRepository = userRepository;
+        this.userEventSender = userEventSender;
+        this.DEFAULT_PROFILE_PIC = DEFAULT_PROFILE_PIC;
+    }
+
 
     public List<User> findAll() {
         log.info("retrieving all users");
@@ -66,6 +77,10 @@ public class UserService {
                 add(Role.USER);
             }
         });
+
+        if (user.getUserProfile().getProfilePictureUrl() == null) {
+            user.getUserProfile().setProfilePictureUrl(DEFAULT_PROFILE_PIC);
+        }
 
         User savedUser = userRepository.save(user);
         userEventSender.sendUserCreated(savedUser);

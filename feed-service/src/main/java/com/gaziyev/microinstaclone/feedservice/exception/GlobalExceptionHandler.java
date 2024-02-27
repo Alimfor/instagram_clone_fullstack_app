@@ -17,6 +17,11 @@ public class GlobalExceptionHandler {
         return handleCustomException(ex.getLocalizedMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
+    @ExceptionHandler(NullPointerException.class)
+    public ResponseEntity<?> handleRuntimeException(NullPointerException ex) {
+        return handleCustomException(ex.getMessage(), HttpStatus.BAD_REQUEST);
+    }
+
     @ExceptionHandler(ResourceNotFoundException.class)
     public ResponseEntity<?> handleResourceNotFound(ResourceNotFoundException ex) {
         return handleCustomException(ex.getMessage(), HttpStatus.NOT_FOUND);

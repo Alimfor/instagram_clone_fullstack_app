@@ -8,3 +8,7 @@ spring:
   cloud:
     config:
       fail-fast: true
+
+default:
+  values:
+    profile-picture-url: 'https://www.clipartmax.com/png/full/131-1313893_account-avatar-face-head-person-profile-user-comments-person-head-icon-png.png'

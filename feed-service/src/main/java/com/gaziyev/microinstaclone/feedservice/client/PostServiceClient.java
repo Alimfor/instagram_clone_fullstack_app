@@ -9,10 +9,7 @@ import org.springframework.web.bind.annotation.RequestHeader;
 
 import java.util.List;
 
-@FeignClient(
-        url = "http://localhost:8000/api/posts-ids/",//http:localhost:8765/insta",
-        name = "post-service"
-)
+@FeignClient("post-service")
 public interface PostServiceClient {
 
     String POST_FIND_POSTS_BY_IDS = "/posts/in";

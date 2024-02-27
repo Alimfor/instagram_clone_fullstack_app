@@ -2,8 +2,8 @@ package com.gaziyev.microinstaclone.feedservice.service;
 
 import com.gaziyev.microinstaclone.feedservice.client.PostServiceClient;
 import com.gaziyev.microinstaclone.feedservice.configuration.JwtConfig;
-import com.gaziyev.microinstaclone.feedservice.payload.Post;
 import com.gaziyev.microinstaclone.feedservice.exception.UnableToGetPostsException;
+import com.gaziyev.microinstaclone.feedservice.payload.Post;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
@@ -24,8 +24,10 @@ public class PostService {
 
         log.info("fetching posts in {}", postIds);
 
+
         ResponseEntity<List<Post>> response =
                 postServiceClient.findPostsByIdIn(jwtConfig.getPrefix() + token, postIds);
+
 
         if (!response.getStatusCode().is2xxSuccessful()) {
             String message = String.format("Failed to fetch posts in %s", postIds);
@@ -34,8 +36,15 @@ public class PostService {
             throw new UnableToGetPostsException(message);
         }
 
-        return Objects.requireNonNull(
-                response.getBody()
-        );
+        try {
+            Objects.requireNonNull(
+                    response.getBody(),
+                    String.format("Failed to fetch posts in %s", postIds)
+            );
+        } catch (NullPointerException e) {
+            throw new NullPointerException(String.format("Failed to fetch posts in %s", postIds));
+        }
+
+        return response.getBody();
     }
 }

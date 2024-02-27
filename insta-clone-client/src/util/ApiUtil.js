@@ -83,7 +83,7 @@ export function uploadImage(uploadImageRequest) {
 
 	return request({
 		setContentType: false,
-		url: API_BASE_URL + "/media/images",
+		url: API_BASE_URL + "/images/upload",
 		method: "POST",
 		body: uploadImageRequest
 	});

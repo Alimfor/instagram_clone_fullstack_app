@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestParam;
 
-@FeignClient(url = "http://localhost:8765/insta/follow_users", name = "graph-service")
+@FeignClient("graph-service")
 public interface GraphServiceClient {
 
     String GET_FIND_USERS_FOLLOWERS = "/paginated/{username}/followers";

@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RequestHeader;
 
 import java.util.List;
 
-@FeignClient(url = "http://localhost:8765/insta", name = "auth-service")
+@FeignClient("auth-service")
 public interface AuthServiceClient {
 
     String POST_SIGN_IN = "/auth/sign-in";

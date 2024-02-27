@@ -58,9 +58,13 @@ public class AuthService {
             throw new UnableToGetUsersException(message);
         }
 
-        return Objects.requireNonNull(response.getBody())
-                .stream()
-                .collect(toMap(UserSummaryDTO::getUsername,
-                        UserSummaryDTO::getProfilePicture));
+        try {
+            return Objects.requireNonNull(response.getBody())
+                    .stream()
+                    .collect(toMap(UserSummaryDTO::getUsername,
+                            UserSummaryDTO::getProfilePicture));
+        } catch (NullPointerException e) {
+            throw new NullPointerException("unable to get user profile picture");
+        }
     }
 }

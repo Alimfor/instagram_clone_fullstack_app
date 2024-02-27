@@ -9,7 +9,6 @@ import java.util.Set;
 @Setter
 @Builder
 @ToString
-@EqualsAndHashCode
 @NoArgsConstructor
 @AllArgsConstructor
 public class Profile {
@@ -18,4 +17,5 @@ public class Profile {
     private String profilePictureUrl;
     private Date birthday;
     private Set<Address> addresses;
+
 }
