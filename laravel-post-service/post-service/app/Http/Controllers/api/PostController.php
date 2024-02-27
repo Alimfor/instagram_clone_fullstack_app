@@ -108,15 +108,6 @@ class PostController extends Controller
     public function findPostsByIdIn(Request $request): JsonResponse
     {
 
-        $validator = Validator::make($request->all(), [
-            '*' => 'uuid'
-        ]);
-
-        if ($validator->fails()) {
-            $errors = 'Ids must be valid uuids';
-            return response()->json(['error' => $errors], 400);
-        }
-
         $ids = $request->json()->all();
         Log::info('Fetching posts for ' . count($ids) . ' ids');
 

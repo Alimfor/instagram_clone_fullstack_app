@@ -10,16 +10,6 @@ use Tests\TestCase;
 
 class FindPostByIdInTest extends TestCase
 {
-    public static function idsProvider() : array
-    {
-        return [
-            'Multiple identifiers' => [
-                    "8032a848-f765-4e63-8fbb-11acde9fefc7",
-                    "71f9460b-cbca-4238-84f7-301c5b192f0b"
-            ],
-            'Single identifier' => ["8032a848-f765-4e63-8fbb-11acde9fefc7"]
-        ];
-    }
 
     public static function nonValidIdsProvider() : array
     {
@@ -44,24 +34,6 @@ class FindPostByIdInTest extends TestCase
 
         $response = $this->callEndpointAndReturnResponse(JwtToken::getJwtToken(), $ids);
         $response->assertStatus(200);
-    }
-
-    /**
-     * @dataProvider nonValidIdsProvider
-     */
-    public function test_find_posts_by_id_in_should_return_400_status_if_ids_are_invalid($ids)
-    {
-
-        $service = Mockery::mock(PostService::class);
-        $this->app->instance(PostService::class, $service);
-
-        $service->shouldReceive('findPostsByIdIn')->never();
-
-        $response = $this->callEndpointAndReturnResponse(JwtToken::getJwtToken(), $ids);
-        $response->assertStatus(400)
-        ->assertJson([
-            'error' => 'Ids must be valid uuids'
-        ]);
     }
 
     /**
