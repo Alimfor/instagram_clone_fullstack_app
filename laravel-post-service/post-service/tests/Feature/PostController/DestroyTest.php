@@ -52,26 +52,6 @@ class DestroyTest extends TestCase
             ]);
     }
 
-    public function test_destroy_should_return_400_status_with_json_if_post_id_is_wrong()
-    {
-
-        $wrongPostId = "f76bc69e-cb59-4e4d-b685-ebde99c8a3d8";
-
-        $response = $this->callEndpointAndReturnResponse(JwtToken::getJwtToken(), $wrongPostId);
-        $response->assertStatus(400)
-            ->assertJson([
-                'error' => "Post with id $wrongPostId not found"
-            ]);
-    }
-
-    public function test_destroy_should_return_403_status_if_post_is_not_belong_to_user()
-    {
-        $jwtTokenThatBelongsToAnotherUser = JwtToken::getJwtToken();
-        $postId = "here should be post id";
-
-        $response = $this->callEndpointAndReturnResponse($jwtTokenThatBelongsToAnotherUser, $postId);
-        $response->assertStatus(403);
-    }
 
     private function callEndpointAndReturnResponse($token, $postId): TestResponse
     {

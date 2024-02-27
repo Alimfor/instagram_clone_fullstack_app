@@ -11,6 +11,17 @@ use Tests\TestCase;
 class FindPostByIdInTest extends TestCase
 {
 
+    public static function idsProvider() : array
+    {
+        return [
+            'Multiple identifiers' => [
+                "8032a848-f765-4e63-8fbb-11acde9fefc7",
+                "71f9460b-cbca-4238-84f7-301c5b192f0b"
+            ],
+            'Single identifier' => ["8032a848-f765-4e63-8fbb-11acde9fefc7"]
+        ];
+    }
+
     public static function nonValidIdsProvider() : array
     {
         return [

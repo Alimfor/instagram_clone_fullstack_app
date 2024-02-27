@@ -51,9 +51,9 @@ services:
       context: .\laravel-post-service\post-service\
       dockerfile: Dockerfile
     ports:
-      - 8000:8000
+      - 8089:8000
     volumes:
-      - D:\Backend\php\post-service:/app
+      - ./laravel-post-service/post-service:/app
     command: 'php artisan serve --host=0.0.0.0'
     links:
       - kafka
