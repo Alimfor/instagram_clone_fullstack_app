@@ -20,11 +20,11 @@ class Login extends Component {
     const AntWrappedLoginForm = Form.create()(LoginForm);
     return (
       <React.Fragment>
-        <div className="login-container">
+        <div className="login">
           <Row type="flex" justify="center">
             <Col pan={24}>
-              <div className="logo-container">
-                <span>𝓜𝔂 𝓜𝓸𝓶𝓮𝓷𝓽𝓼</span>
+              <div className="logo">
+                <span>Instagram Clone</span>
               </div>
             </Col>
             <Col pan={24}>
@@ -32,7 +32,7 @@ class Login extends Component {
             </Col>
           </Row>
         </div>
-        <div className="signup-link-container">
+        <div className="signup-link">
           Don't have an account? <Link to="/signup">Signup</Link>
         </div>
       </React.Fragment>
@@ -57,13 +57,13 @@ class LoginForm extends Component {
           .catch(error => {
             if (error.status === 401) {
               notification.error({
-                message: "MyMoments",
+                message: "Instagram Clone",
                 description:
                   "Username or Password is incorrect. Please try again!"
               });
             } else {
               notification.error({
-                message: "MyMoments",
+                message: "Instagram Clone",
                 description:
                   error.message ||
                   "Sorry! Something went wrong. Please try again!"

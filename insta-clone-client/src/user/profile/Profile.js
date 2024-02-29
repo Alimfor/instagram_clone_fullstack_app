@@ -15,11 +15,11 @@ import LoadingIndicator from "../../common/LoadingIndicator";
 import {
   getUserProfile,
   getUserPosts,
-  getfollowersAndFollowing,
+  getFollowersAndFollowing,
   follow,
   isFollowing,
-  getfollowers,
-  getfollowing
+  getFollowers,
+  getFollowing
 } from "../../util/ApiUtil";
 import PostGrid from "../../post/postgrid/PostGrid";
 import FollowModal from "./FollowModal";
@@ -49,7 +49,7 @@ class Profile extends Component {
 
     const username = this.props.match.params.username;
     this.loadUserProfile(username);
-    this.getfollowersAndFollowing(username);
+    this.getFollowersAndFollowing(username);
     if (this.props.currentUser !== null) {
       this.isFollowing(this.props.currentUser.username, username);
     }
@@ -61,7 +61,7 @@ class Profile extends Component {
       this.handleFollowingCancel();
       const username = this.props.match.params.username;
       this.loadUserProfile(username);
-      this.getfollowersAndFollowing(username);
+      this.getFollowersAndFollowing(username);
 
       this.isFollowing(this.props.currentUser.username, username);
     }
@@ -80,15 +80,15 @@ class Profile extends Component {
 
         if (error.status === 404) {
           notification.error({
-            message: "MyMoments",
+            message: "Instagram Clone",
             description: "user not found"
           });
         }
       });
   };
 
-  getfollowersAndFollowing = username => {
-    getfollowersAndFollowing(username).then(response =>
+  getFollowersAndFollowing = username => {
+    getFollowersAndFollowing(username).then(response =>
       this.setState({
         followers: response.inDegree,
         following: response.outDegree
@@ -127,13 +127,13 @@ class Profile extends Component {
 
     follow(followRequest).then(response => {
       this.setState({ followLoading: false, isFollowing: true });
-      this.getfollowersAndFollowing(this.state.currentUser.username);
+      this.getFollowersAndFollowing(this.state.currentUser.username);
     });
   };
 
   handleFollowersClick = () => {
     if (this.state.followers > 0) {
-      getfollowers(this.state.currentUser.username).then(response =>
+      getFollowers(this.state.currentUser.username).then(response =>
         this.setState({ followerList: response, followersModalVisible: true })
       );
     }
@@ -141,7 +141,7 @@ class Profile extends Component {
 
   handleFollowingClick = () => {
     if (this.state.following > 0) {
-      getfollowing(this.state.currentUser.username).then(response =>
+      getFollowing(this.state.currentUser.username).then(response =>
         this.setState({ followingList: response, followingModalVisible: true })
       );
     }
@@ -192,7 +192,7 @@ class Profile extends Component {
     }
 
     return (
-      <div className="profile-container">
+      <div className="profile">
         <Row>
           <Col span={24}>
             <div className="user-details">

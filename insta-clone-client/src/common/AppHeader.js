@@ -29,9 +29,9 @@ class AppHeader extends Component {
       <div style={{ marginLeft: "17%", marginRight: "17%" }}>
         <Row>
           <Col span={8}>
-            <div className="app-logo-container">
+            <div className="app-logo">
               <Link to="/">
-                <span>𝓜𝔂 𝓜𝓸𝓶𝓮𝓷𝓽𝓼</span>
+                <span>Instagram Clone</span>
               </Link>
             </div>
           </Col>

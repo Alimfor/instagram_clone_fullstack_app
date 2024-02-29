@@ -1,1 +1,1 @@
-# instagram_clone_fullstack_app
+# instagram-clone-servers-config

@@ -147,7 +147,7 @@ export function follow(followRequest) {
 	});
 }
 
-export function getfollowersAndFollowing(username) {
+export function getFollowersAndFollowing(username) {
 	if ( !localStorage.getItem(ACCESS_TOKEN)) {
 		return Promise.reject("No access token set.");
 	}
@@ -169,7 +169,7 @@ export function isFollowing(usernameA, usernameB) {
 	});
 }
 
-export function getfollowers(username) {
+export function getFollowers(username) {
 	if ( !localStorage.getItem(ACCESS_TOKEN)) {
 		return Promise.reject("No access token set.");
 	}
@@ -180,7 +180,7 @@ export function getfollowers(username) {
 	});
 }
 
-export function getfollowing(username) {
+export function getFollowing(username) {
 	if ( !localStorage.getItem(ACCESS_TOKEN)) {
 		return Promise.reject("No access token set.");
 	}
