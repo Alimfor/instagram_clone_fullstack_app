@@ -52,8 +52,8 @@ public class SecurityConfig {
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(auth ->
                         auth
-                                .requestMatchers(HttpMethod.POST,"/auth/sign-in").permitAll()
-                                .requestMatchers(HttpMethod.POST, "/auth/sign-up").anonymous()
+                                .requestMatchers(HttpMethod.POST,"/sign-in").permitAll()
+                                .requestMatchers(HttpMethod.POST, "/sign-up").anonymous()
                                 .anyRequest().authenticated()
                 )
                 .sessionManagement(session ->

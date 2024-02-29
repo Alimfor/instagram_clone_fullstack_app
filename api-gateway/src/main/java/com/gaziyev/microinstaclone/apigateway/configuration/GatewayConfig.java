@@ -15,50 +15,42 @@ public class GatewayConfig {
     @Bean
     public RouteLocator routeLocator(RouteLocatorBuilder builder) {
         return builder.routes()
-                .route(gate -> gate
-                        .path("/insta/auth/**")
-                        .filters(filter -> filter
-                                .rewritePath("/insta/auth/(?<segment>.*)","/auth/${segment}")
-                                .filter(authenticationFilter)
-                        )
-                        .uri("lb://auth-service")
+                .route("auth-service-route", gate ->
+                        gate.path("/insta/auth/**")
+                                .filters(filter -> filter
+                                        .stripPrefix(2)
+                                        .filter(authenticationFilter)
+                                )
+                                .uri("lb://auth-service")
                 )
-                .route(gate -> gate
-                        .path("/insta/users/**")
-                        .filters(filter -> filter
-                                .rewritePath("/insta/users/(?<segment>.*)","/users/${segment}")
-                                .filter(authenticationFilter)
-                        )
-                        .uri("lb://auth-service")
-                )
-                .route(gate -> gate
+                .route("feed-service-route", gate -> gate
                         .path("/insta/feed/**")
                         .filters(filter -> filter
-                                .rewritePath("/insta/feed/(?<segment>.*)","/feed/${segment}")
+                                .rewritePath("/insta/feed/(?<segment>.*)", "/feed/${segment}")
                                 .filter(authenticationFilter)
                         )
                         .uri("lb://feed-service")
                 )
-                .route(gate -> gate
-                        .path("/insta/follow_users/**")
+                .route("graph-service-route", gate -> gate
+                        .path("/insta/graph/**")
                         .filters(filter -> filter
-                                .rewritePath("/insta/follow_users/(?<segment>.*)","/users/${segment}")
+                                .stripPrefix(2)
                                 .filter(authenticationFilter)
                         )
                         .uri("lb://graph-service")
                 )
-                .route(gate -> gate
-                        .path("/insta/images/**")
+                .route("media-service-route", gate -> gate
+                        .path("/insta/media/**")
                         .filters(filter -> filter
-                                .rewritePath("/insta/images/(?<segment>.*)","/images/${segment}")
+                                .stripPrefix(2)
                                 .filter(authenticationFilter)
                         )
                         .uri("lb://media-service")
                 )
-                .route(gate -> gate
-                        .path("/insta/posts/**")
+                .route("post-service-route", gate -> gate
+                        .path("/insta/post/**")
                         .filters(filter -> filter
-                                .rewritePath("/insta/posts/(?<segment>.*)","/posts/${segment}")
+                                .stripPrefix(2)
                                 .filter(authenticationFilter)
                         )
                         .uri("lb://post-service")

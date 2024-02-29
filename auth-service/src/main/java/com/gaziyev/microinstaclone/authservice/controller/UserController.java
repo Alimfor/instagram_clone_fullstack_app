@@ -38,9 +38,9 @@ public class UserController {
     private final AuthenticationManager authenticationManager;
     private final JwtTokenService jwtTokenProvider;
 
-    private static final String POST_SIGN_IN = "/auth/sign-in";
-    private static final String POST_REFRESH_TOKEN = "/auth/refresh-token";
-    private static final String POST_SIGN_UP = "/auth/sign-up";
+    private static final String POST_SIGN_IN = "/sign-in";
+    private static final String POST_REFRESH_TOKEN = "/refresh-token";
+    private static final String POST_SIGN_UP = "/sign-up";
     private static final String GET_USER_BY_USERNAME = "/users/{username}";
     private static final String GET_ALL_USERS = "/users/all";
     private static final String GET_CURRENT_USER = "/users/me";

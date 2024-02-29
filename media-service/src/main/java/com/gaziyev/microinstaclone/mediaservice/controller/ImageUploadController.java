@@ -22,7 +22,7 @@ public class ImageUploadController {
 
 	private final ImageService imageService;
 
-	private static final String POST_IMAGE = "/images/upload";
+	private static final String POST_IMAGE = "/image/upload";
 
 	@PostMapping(POST_IMAGE)
 	@PreAuthorize("hasRole('USER')")
