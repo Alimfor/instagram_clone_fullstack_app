@@ -1,13 +1,13 @@
 package com.gaziyev.microinstaclone.authservice.controller;
 
-import com.gaziyev.microinstaclone.authservice.model.InstaUserDetails;
+import com.gaziyev.microinstaclone.authservice.dto.*;
 import com.gaziyev.microinstaclone.authservice.entity.Profile;
 import com.gaziyev.microinstaclone.authservice.entity.User;
 import com.gaziyev.microinstaclone.authservice.exception.BadRequestException;
 import com.gaziyev.microinstaclone.authservice.exception.EmailAlreadyExistsException;
 import com.gaziyev.microinstaclone.authservice.exception.ResourceNotFoundException;
 import com.gaziyev.microinstaclone.authservice.exception.UsernameAlreadyExistsException;
-import com.gaziyev.microinstaclone.authservice.dto.*;
+import com.gaziyev.microinstaclone.authservice.model.InstaUserDetails;
 import com.gaziyev.microinstaclone.authservice.service.JwtTokenService;
 import com.gaziyev.microinstaclone.authservice.service.UserService;
 import jakarta.validation.Valid;

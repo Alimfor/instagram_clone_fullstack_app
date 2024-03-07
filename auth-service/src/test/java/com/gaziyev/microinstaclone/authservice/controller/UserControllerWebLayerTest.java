@@ -68,7 +68,7 @@ public class UserControllerWebLayerTest {
         doNothing().when(userService).registerUser(any(User.class));
 
 
-        MockHttpServletRequestBuilder requestBuilder = MockMvcRequestBuilders.post("/auth/sign-up")
+        MockHttpServletRequestBuilder requestBuilder = MockMvcRequestBuilders.post("/sign-up")
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON)
                 .content(new ObjectMapper().writeValueAsString(signUpRequestDTO));
@@ -217,7 +217,7 @@ public class UserControllerWebLayerTest {
         signUpRequestDTO.setEmail(null);
         signUpRequestDTO.setPassword(null);
 
-        MockHttpServletRequestBuilder requestBuilder = MockMvcRequestBuilders.post("/auth/sign-up")
+        MockHttpServletRequestBuilder requestBuilder = MockMvcRequestBuilders.post("/sign-up")
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON)
                 .content(new ObjectMapper().writeValueAsString(signUpRequestDTO));
@@ -247,7 +247,7 @@ public class UserControllerWebLayerTest {
         signUpRequestDTO.setEmail("test@test.com");
         signUpRequestDTO.setPassword("12345");
 
-        MockHttpServletRequestBuilder requestBuilder = MockMvcRequestBuilders.post("/auth/sign-up")
+        MockHttpServletRequestBuilder requestBuilder = MockMvcRequestBuilders.post("/sign-up")
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON)
                 .content(new ObjectMapper().writeValueAsString(signUpRequestDTO));
@@ -275,7 +275,7 @@ public class UserControllerWebLayerTest {
         signUpRequestDTO.setEmail("testtttttttttttttttttttttttttttt43@test.com");
         signUpRequestDTO.setPassword("1234543243242342323434(26)");
 
-        MockHttpServletRequestBuilder requestBuilder = MockMvcRequestBuilders.post("/auth/sign-up")
+        MockHttpServletRequestBuilder requestBuilder = MockMvcRequestBuilders.post("/sign-up")
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON)
                 .content(new ObjectMapper().writeValueAsString(signUpRequestDTO));
@@ -305,7 +305,7 @@ public class UserControllerWebLayerTest {
         signUpRequestDTO.setEmail("alim@test.com()");
         signUpRequestDTO.setPassword("123123");
 
-        MockHttpServletRequestBuilder requestBuilder = MockMvcRequestBuilders.post("/auth/sign-up")
+        MockHttpServletRequestBuilder requestBuilder = MockMvcRequestBuilders.post("/sign-up")
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON)
                 .content(new ObjectMapper().writeValueAsString(signUpRequestDTO));

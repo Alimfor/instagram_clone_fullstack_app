@@ -14,7 +14,7 @@ import java.util.List;
 @FeignClient("auth-service")
 public interface AuthServiceClient {
 
-    String POST_SIGN_IN = "/auth/sign-in";
+    String POST_SIGN_IN = "/sign-in";
     String POST_GET_USERS_SUMMARY_BY_USERNAMES = "/users/summary/in";
 
     @PostMapping(POST_SIGN_IN)

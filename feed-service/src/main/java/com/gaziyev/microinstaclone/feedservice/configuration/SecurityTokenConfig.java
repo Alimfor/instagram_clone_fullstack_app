@@ -29,6 +29,7 @@ public class SecurityTokenConfig {
                 )
                 .authorizeHttpRequests(auth ->
                         auth
+                                .requestMatchers("/actuator/**").permitAll()
                                 .anyRequest().authenticated()
                 )
                 .exceptionHandling(exception ->

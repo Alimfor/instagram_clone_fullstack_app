@@ -2,7 +2,7 @@ package com.gaziyev.microinstaclone.feedservice.service;
 
 import com.gaziyev.microinstaclone.feedservice.client.AuthServiceClient;
 import com.gaziyev.microinstaclone.feedservice.configuration.JwtConfig;
-import com.gaziyev.microinstaclone.feedservice.exception.UnableToGetAccessTokenException;
+import com.gaziyev.microinstaclone.feedservice.exception.UnableToGetTokensException;
 import com.gaziyev.microinstaclone.feedservice.exception.UnableToGetUsersException;
 import com.gaziyev.microinstaclone.feedservice.dto.JwtAuthenticationResponseDTO;
 import com.gaziyev.microinstaclone.feedservice.dto.ServiceLoginRequestDTO;
@@ -34,10 +34,10 @@ public class AuthService {
 
         if (!response.getStatusCode().is2xxSuccessful()) {
             String message = String.format(
-                    "unable to get access token: %s", response.getStatusCode()
+                    "unable to get tokens: %s", response.getStatusCode()
             );
             log.error(message);
-            throw new UnableToGetAccessTokenException(message);
+            throw new UnableToGetTokensException(message);
         }
 
         return Objects.requireNonNull(response.getBody())

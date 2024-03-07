@@ -57,7 +57,7 @@ public class UserControllerIntegrationTest {
     void testCreateUser_givenSignUpRequestDTO_whenValidUserProvided_thenReturnCreatedUser() throws JSONException {
 
         String username = "konan";
-        final String POST_SIGN_UP = "/auth/sign-up";
+        final String POST_SIGN_UP = "/sign-up";
         final String expectedMessage = "User registered successfully";
         final String errorMessageForActualMessage = "message response should be like: User registered successfully";
 
@@ -86,7 +86,7 @@ public class UserControllerIntegrationTest {
     void testCreateUser_givenSignUpRequestDTO_whenExistsUserProvided_thenReturnBadRequest() throws JSONException {
 
         String username = "konan";
-        final String POST_SIGN_UP = "/auth/sign-up";
+        final String POST_SIGN_UP = "/sign-up";
         final String expectedMessage = String.format("User with username %s already exists", username);
         final String errorMessageForActualMessage = "message response should be like: " + expectedMessage;
 
@@ -142,7 +142,7 @@ public class UserControllerIntegrationTest {
     @DisplayName("Trying to login user")
     void testAuthenticateUser_givenLoginRequestDTO_whenValidUserProvided_thenReturnMapOfTokens() throws JSONException {
 
-        final String POST_SIGN_IN = "/auth/sign-in";
+        final String POST_SIGN_IN = "/sign-in";
         final String EXPECTED_TOKEN_TYPE = "Bearer";
         final String ACCESS_TOKEN = "access_token";
         final String REFRESH_TOKEN = "refresh_token";
@@ -347,7 +347,7 @@ public class UserControllerIntegrationTest {
     @DisplayName("Trying to refresh access token")
     void testRefreshToken_givenRefreshToken_whenValidTokenProvided_thenReturnMapOfTokens() throws JSONException {
 
-        final String POST_REFRESH_TOKEN = "/auth/refresh-token";
+        final String POST_REFRESH_TOKEN = "/refresh-token";
         final String EXPECTED_TOKEN_TYPE = "Bearer";
         final String ACCESS_TOKEN = "access_token";
         final String REFRESH_TOKEN = "refresh_token";

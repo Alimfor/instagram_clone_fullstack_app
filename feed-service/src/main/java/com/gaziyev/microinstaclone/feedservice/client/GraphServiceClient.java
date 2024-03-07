@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 @FeignClient("graph-service")
 public interface GraphServiceClient {
 
-    String GET_FIND_USERS_FOLLOWERS = "/paginated/{username}/followers";
+    String GET_FIND_USERS_FOLLOWERS = "/users/paginated/{username}/followers";
 
     @GetMapping(GET_FIND_USERS_FOLLOWERS)
     ResponseEntity<PagedResultDTO<User>> findFollowers(
