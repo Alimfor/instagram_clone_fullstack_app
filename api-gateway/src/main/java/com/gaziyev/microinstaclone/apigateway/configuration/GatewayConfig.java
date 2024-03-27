@@ -58,6 +58,11 @@ public class GatewayConfig {
             PredicateSpec route,
             String path, String uri, String circuitBreakerName, String serviceName
     ) {
+        String rootName = "/inst/";
+        String servicePath = path.substring(
+                rootName.length() + serviceName.length() + 1
+        );
+
         return route.path(path)
                 .filters(filter -> commonFilters(
                         filter.stripPrefix(2),

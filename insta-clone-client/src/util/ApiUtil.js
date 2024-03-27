@@ -49,7 +49,7 @@ export function getCurrentUser() {
 	}
 
 	return request({
-		url: API_BASE_URL + "/users/me",
+		url: API_BASE_URL + "/auth/users/me",
 		method: "GET"
 	});
 }
@@ -60,7 +60,7 @@ export function getUserProfile(username) {
 	}
 
 	return request({
-		url: API_BASE_URL + "/users/summary/" + username,
+		url: API_BASE_URL + "/auth/users/summary/" + username,
 		method: "GET"
 	});
 }
@@ -71,7 +71,7 @@ export function getAllUsers() {
 	}
 
 	return request({
-		url: API_BASE_URL + "/users/all",
+		url: API_BASE_URL + "/auth/users/all",
 		method: "GET"
 	});
 }
@@ -83,7 +83,7 @@ export function uploadImage(uploadImageRequest) {
 
 	return request({
 		setContentType: false,
-		url: API_BASE_URL + "/images/upload",
+		url: API_BASE_URL + "/media/image/upload",
 		method: "POST",
 		body: uploadImageRequest
 	});
@@ -95,7 +95,7 @@ export function updateProfilePicture(uri) {
 	}
 
 	return request({
-		url: API_BASE_URL + "/users/me/picture",
+		url: API_BASE_URL + "/auth/users/me/picture",
 		method: "PUT",
 		body: uri
 	});
@@ -119,7 +119,7 @@ export function getCurrentUserPosts() {
 	}
 
 	return request({
-		url: API_BASE_URL + "/posts/me",
+		url: "http://localhost:8089/api/posts/me",
 		method: "GET"
 	});
 }
@@ -130,7 +130,7 @@ export function getUserPosts(username) {
 	}
 
 	return request({
-		url: API_BASE_URL + "/posts/" + username,
+		url: "http://localhost:8089/api/posts/" + username,
 		method: "GET"
 	});
 }
@@ -141,7 +141,7 @@ export function follow(followRequest) {
 	}
 
 	return request({
-		url: API_BASE_URL + "/follow_users/followers",
+		url: API_BASE_URL + "/graph/users/followers",
 		method: "POST",
 		body: JSON.stringify(followRequest)
 	});
@@ -153,7 +153,7 @@ export function getFollowersAndFollowing(username) {
 	}
 
 	return request({
-		url: API_BASE_URL + "/follow_users/" + username + "/degree",
+		url: API_BASE_URL + "/graph/users/" + username + "/degree",
 		method: "GET"
 	});
 }
@@ -164,7 +164,7 @@ export function isFollowing(usernameA, usernameB) {
 	}
 
 	return request({
-		url: API_BASE_URL + "/follow_users/" + usernameA + "/following/" + usernameB,
+		url: API_BASE_URL + "/graph/users/" + usernameA + "/following/" + usernameB,
 		method: "GET"
 	});
 }
@@ -175,7 +175,7 @@ export function getFollowers(username) {
 	}
 
 	return request({
-		url: API_BASE_URL + "/follow_users/" + username + "/followers",
+		url: API_BASE_URL + "/graph/users/" + username + "/followers",
 		method: "GET"
 	});
 }
@@ -186,7 +186,7 @@ export function getFollowing(username) {
 	}
 
 	return request({
-		url: API_BASE_URL + "/follow_users/" + username + "/following",
+		url: API_BASE_URL + "/graph/users/" + username + "/following",
 		method: "GET"
 	});
 }

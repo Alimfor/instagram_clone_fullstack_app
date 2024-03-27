@@ -13,6 +13,7 @@ spring:
         enabled: true
         alphanumeric-ids:
           enabled: true
+
 resilience4j:
   circuitbreaker:
     configs:
@@ -22,12 +23,7 @@ resilience4j:
         failure-rate-threshold: 50
         wait-duration-in-open-state: 10s
 
-management:
-  endpoints:
-    web:
-      exposure:
-        include: "*"
-
-  info:
-    env:
-      enabled: true
+logstash:
+  host: localhost
+  port: 5009
+  queue-size: 512

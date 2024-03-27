@@ -15,6 +15,9 @@ import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.*;
 
+import java.io.BufferedWriter;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -46,9 +49,16 @@ public class UserControllerIntegrationTest {
     }
 
     @AfterAll
-    void afterAll() {
+    void afterAll() throws IOException {
 
         userRepository.deleteById(userId);
+
+        final String outputFileName = "../jwt.txt";
+
+        try(BufferedWriter writer = new BufferedWriter(new FileWriter(outputFileName))) {
+
+            writer.write(accessToken);
+        }
     }
 
     @Test

@@ -68,8 +68,56 @@ services:
     volumes:
       - ./db/redis:/var/lib/redis
 
+  elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch:7.8.0
+    ports:
+      - 9200:9200
+      - 9300:9300
+    restart: unless-stopped
+    environment:
+      discovery.type: single-node
+    networks:
+      - backend
+
+  logstash:
+      image: docker.elastic.co/logstash/logstash:7.8.0
+      ports:
+        - 5009:5009
+      networks:
+        - backend
+      volumes:
+        - ./docker/pipeline:/usr/share/logstash/pipeline
+
+  kibana:
+      image: docker.elastic.co/kibana/kibana:7.8.0
+      environment:
+        ELASTICSEARCH_HOSTS: http://elasticsearch:9200
+      networks:
+        - backend
+      ports:
+        - 5601:5601
+
+  prometheus:
+    image: prom/prometheus:v2.45.0
+    container_name: prometheus
+    ports:
+      - 9090:9090
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    volumes:
+      - ./docker/prometheus.yml:/etc/prometheus/prometheus.yml
+
+  grafana:
+    image: grafana/grafana:latest
+    ports:
+      - 3001:3000
+    volumes:
+      - ./docker/grafana/provisioning/:/etc/grafana/provisioning/
+
 networks:
   mongo_network:
+    driver: bridge
+  backend:
     driver: bridge
 
 volumes:

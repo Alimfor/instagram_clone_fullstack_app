@@ -13,7 +13,7 @@ public class RouteValidator {
             "/sign-in",
             "/sign-up",
             "/refresh-token",
-            "/actuator/**"
+            "/actuator"
     );
 
     public Predicate<ServerHttpRequest> isSecured =

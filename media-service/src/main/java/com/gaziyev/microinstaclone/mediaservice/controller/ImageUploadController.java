@@ -34,7 +34,7 @@ public class ImageUploadController {
 		);
 		log.info("received a request to upload file {} for user {}", filename, authentication.getPrincipal());
 
-		ImageMetadata metadata = imageService.upload(file,  authentication.getPrincipal().toString());
+		ImageMetadata metadata = imageService.upload(file, authentication.getName());
 		return new UploadFileResponseDTO(metadata.getFilename(), metadata.getUri(),
 		                              metadata.getFileType());
 	}

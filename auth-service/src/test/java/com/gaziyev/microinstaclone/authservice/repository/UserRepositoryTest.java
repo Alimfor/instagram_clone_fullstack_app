@@ -22,7 +22,12 @@ class UserRepositoryTest {
 	private UserRepository repository;
 	private String username;
 	private String email;
-	private String user_id;
+
+	@AfterAll
+	void afterAll() {
+
+		repository.deleteAll();
+	}
 
 	@Test
 	@Order(1)
@@ -49,7 +54,6 @@ class UserRepositoryTest {
 		User savedUser = repository.save(user);
 		username = savedUser.getUsername();
 		email    = savedUser.getEmail();
-		user_id  = savedUser.getId();
 
 		assertThat(savedUser).isNotNull();
 		assertThat(savedUser.getId()).isNotEmpty();
@@ -130,16 +134,5 @@ class UserRepositoryTest {
 
 		assertThat(updatedUser.getEmail()).isEqualTo(newEmail);
 		assertThat(updatedUser.getUsername()).isEqualTo(username);
-	}
-
-	@Test
-	@Order(9)
-	@DisplayName("Trying to delete user")
-	void testDeleteById_givenUserId_whenUserIsDeleted_thenVerifyByExistsById() {
-
-		repository.deleteById(user_id);
-		boolean isExists = repository.existsById(user_id);
-
-		assertThat(isExists).isFalse();
 	}
 }

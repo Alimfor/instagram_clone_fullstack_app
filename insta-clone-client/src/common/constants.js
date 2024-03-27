@@ -1,4 +1,4 @@
-export const API_BASE_URL = "http://localhost:8765/insta";
+export const API_BASE_URL = "http://localhost:8765/inst";
 export const ACCESS_TOKEN = "accessToken";
 
 export const NAME_MIN_LENGTH = 3;
