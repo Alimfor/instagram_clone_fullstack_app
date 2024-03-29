@@ -23,6 +23,10 @@ public class SecurityTokenConfig {
 
         http
                 .csrf(AbstractHttpConfigurer::disable)
+                .authorizeHttpRequests(auth ->
+                        auth
+                                .requestMatchers("/actuator/**").permitAll()
+                )
                 .sessionManagement(session ->
                         session
                                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS)

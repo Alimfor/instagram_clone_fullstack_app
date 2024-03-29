@@ -27,3 +27,17 @@ logstash:
   host: localhost
   port: 5009
   queue-size: 512
+
+management:
+  metrics:
+    tags:
+      application: ${spring.application.name}
+  tracing:
+    sampling:
+      probability: 1.0
+
+info:
+  app:
+    name: feed-server
+    description: feed-server for instagram clone app
+    version: 0.0.1

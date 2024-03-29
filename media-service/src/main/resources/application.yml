@@ -13,3 +13,28 @@ logstash:
   host: localhost
   port: 5009
   queue-size: 512
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include:
+          - health
+          - prometheus
+          - info
+          - metrics
+  info:
+    env:
+      enabled: true
+  metrics:
+    tags:
+      application: ${spring.application.name}
+  tracing:
+    sampling:
+      probability: 1.0
+
+info:
+  app:
+    name: media-server
+    description: media-server for instagram clone app
+    version: 0.0.1

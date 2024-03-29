@@ -1,0 +1,30 @@
+services:
+  network-deploy-service:
+    networks:
+      - app_net
+
+  microservice-base-config:
+    extends:
+      service: network-deploy-service
+    deploy:
+      resources:
+        limits:
+          memory: 700m
+
+  microservice-configserver-config:
+    extends:
+      service: microservice-base-config
+    environment:
+      SPRING_CONFIG_IMPORT: configserver:http://config-server:8888/
+
+  logstash-config:
+    extends:
+      service: microservice-configserver-config
+    environment:
+      LOGSTASH_HOST: logstash
+
+  microservice-discovery-config:
+    extends:
+      service: logstash-config
+    environment:
+      EUREKA_CLIENT_SERVICE-URL_DEFAULTZONE: http://discovery-server:8761/eureka/

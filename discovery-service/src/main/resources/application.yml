@@ -16,3 +16,28 @@ logging:
       netflix:
         eureka: OFF
         discovery: OFF
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include:
+          - health
+          - prometheus
+          - info
+          - metrics
+  info:
+    env:
+      enabled: true
+  metrics:
+    tags:
+      application: ${spring.application.name}
+  tracing:
+    sampling:
+      probability: 1.0
+
+info:
+  app:
+    name: discovery-server
+    description: discovery-server for instagram clone app
+    version: 0.0.1

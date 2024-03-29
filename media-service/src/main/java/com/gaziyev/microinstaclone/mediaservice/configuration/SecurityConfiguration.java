@@ -32,7 +32,7 @@ public class SecurityConfiguration {
 				.csrf(AbstractHttpConfigurer::disable)
 				.authorizeHttpRequests(auth ->
 						                       auth
-								                       .requestMatchers(filePathPrefix + "/**").permitAll()
+								                       .requestMatchers(filePathPrefix + "/**", "/actuator/**").permitAll()
 								                       .anyRequest().authenticated()
 				)
 				.sessionManagement(session ->
