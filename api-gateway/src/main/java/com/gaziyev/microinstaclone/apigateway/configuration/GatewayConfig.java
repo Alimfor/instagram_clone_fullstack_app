@@ -36,17 +36,6 @@ public class GatewayConfig {
                 String lbUri = String.format("lb://%s-service", serviceNameLowerCase);
                 String circuitBreakerName = String.format("%s-service-circuit-breaker", serviceNameLowerCase);
 
-                if (serviceNameLowerCase.equals(ServiceName.FEED_SERVICE.getName().toLowerCase())) {
-                    String pathPattern = String.format("/inst/%s/(?<segment>.*)", ServiceName.FEED_SERVICE.getName());
-                    String replacement = String.format("/%s/${segment}", ServiceName.FEED_SERVICE.getName());
-
-                    return configureRouteWithRewrite(
-                            gate, path, pathPattern,
-                            replacement, lbUri,
-                            circuitBreakerName, serviceNameLowerCase
-                    );
-                }
-
                 return configureRoute(gate, path, lbUri, circuitBreakerName, serviceNameLowerCase);
             });
         }
@@ -58,31 +47,10 @@ public class GatewayConfig {
             PredicateSpec route,
             String path, String uri, String circuitBreakerName, String serviceName
     ) {
-        String rootName = "/inst/";
-        String servicePath = path.substring(
-                rootName.length() + serviceName.length() + 1
-        );
-
         return route.path(path)
                 .filters(filter -> commonFilters(
                         filter.stripPrefix(2),
                         circuitBreakerName, serviceName))
-                .metadata(RESPONSE_TIMEOUT_ATTR, 3000L)
-                .metadata(CONNECT_TIMEOUT_ATTR, 1000L)
-                .uri(uri);
-    }
-
-    private Buildable<Route> configureRouteWithRewrite(
-            PredicateSpec route,
-            String path, String pathPattern, String replacement,
-            String uri, String circuitBreakerName, String serviceName
-    ) {
-        return route.path(path)
-                .filters(filter -> commonFilters(
-                                filter.rewritePath(pathPattern, replacement),
-                                circuitBreakerName, serviceName
-                        )
-                )
                 .metadata(RESPONSE_TIMEOUT_ATTR, 3000L)
                 .metadata(CONNECT_TIMEOUT_ATTR, 1000L)
                 .uri(uri);

@@ -19,7 +19,7 @@ import java.util.Optional;
 public class FeedController {
 
     private final FeedService feedService;
-    private static final String GET_FEED_BY_USERNAME = "/feed/{username}";
+    private static final String GET_FEED_BY_USERNAME = "/{username}";
 
     @GetMapping(GET_FEED_BY_USERNAME)
     public ResponseEntity<SliceResultDTO<Post>> getFeedByUsername(

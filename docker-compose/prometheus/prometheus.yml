@@ -6,23 +6,31 @@ scrape_configs:
   - job_name: 'mongodb'
     static_configs:
       - targets: ['mongodb-exporter:9216']
+  - job_name: 'discovery'
+    metrics_path: '/actuator/prometheus'
+    static_configs:
+      - targets: [ 'discovery-server:8761' ]
+  - job_name: 'config-server'
+    metrics_path: '/actuator/prometheus'
+    static_configs:
+      - targets: [ 'config-server:8888' ]
   - job_name: 'auth'
     metrics_path: '/inst/auth/actuator/prometheus'
     static_configs:
-      - targets: ['auth:8765']
+      - targets: ['api-gateway:8765']
   - job_name: 'media'
     metrics_path: '/inst/media/actuator/prometheus'
     static_configs:
-      - targets: ['media:8765']
+      - targets: ['api-gateway:8765']
   - job_name: 'post'
     metrics_path: '/inst/post/actuator/prometheus'
     static_configs:
-      - targets: ['post:8765']
+      - targets: ['api-gateway:8765']
   - job_name: 'graph'
     metrics_path: '/inst/graph/actuator/prometheus'
     static_configs:
-      - targets: ['graph:8765']
+      - targets: ['api-gateway:8765']
   - job_name: 'feed'
     metrics_path: '/inst/feed/actuator/prometheus'
     static_configs:
-      - targets: ['feed:8765']
+      - targets: ['api-gateway:8765']

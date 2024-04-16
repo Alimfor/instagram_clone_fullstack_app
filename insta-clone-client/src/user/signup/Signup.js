@@ -49,15 +49,15 @@ class Signup extends Component {
     signup(signupRequest)
       .then(response => {
         notification.success({
-          message: "Instagram Clone",
+          message: "MyMoments",
           description:
-            response.message || "You have successfully signed up!"
+            "Thank you! You're successfully registered. Please Login to continue!"
         });
         this.props.history.push("/login");
       })
       .catch(error => {
         notification.error({
-          message: "Instagram clone",
+          message: "MyMoments",
           description:
             error.message || "Sorry! Something went wrong. Please try again!"
         });
@@ -89,11 +89,11 @@ class Signup extends Component {
   render() {
     return (
       <React.Fragment>
-        <div className="signup">
+        <div className="signup-container">
           <Row type="flex" justify="center">
             <Col pan={24}>
-              <div className="logo">
-                <span>Instagram Clone</span>
+              <div className="logo-container">
+                <span>𝓜𝔂 𝓜𝓸𝓶𝓮𝓷𝓽𝓼</span>
               </div>
             </Col>
             <Col pan={24}>
@@ -174,7 +174,7 @@ class Signup extends Component {
             </Col>
           </Row>
         </div>
-        <div className="login-link">
+        <div className="login-link-container">
           Have an account? <Link to="/login">Login</Link>
         </div>
       </React.Fragment>

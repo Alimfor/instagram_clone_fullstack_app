@@ -17,9 +17,9 @@ import FollowModal from "./FollowModal";
 import {
   uploadImage,
   updateProfilePicture,
-  getFollowersAndFollowing,
-  getFollowers,
-  getFollowing
+  getfollowersAndFollowing,
+  getfollowers,
+  getfollowing
 } from "../../util/ApiUtil";
 import PostGrid from "../../post/postgrid/PostGrid";
 import { ACCESS_TOKEN } from "../../common/constants";
@@ -43,11 +43,11 @@ class MeProfile extends Component {
       this.props.history.push("/login");
     }
 
-    this.getFollowersAndFollowing(this.state.currentUser.username);
+    this.getfollowersAndFollowing(this.state.currentUser.username);
   };
 
-  getFollowersAndFollowing = username => {
-    getFollowersAndFollowing(username).then(response =>
+  getfollowersAndFollowing = username => {
+    getfollowersAndFollowing(username).then(response =>
       this.setState({
         followers: response.inDegree,
         following: response.outDegree
@@ -97,20 +97,20 @@ class MeProfile extends Component {
             this.props.onUpdateCurrentUser(currentUser);
 
             notification.success({
-              message: "Instagram Clone",
-              description: res.message || "Profile picture updated"
+              message: "MyMoments",
+              description: "Profile picture updated"
             });
           })
           .catch(error => {
             notification.error({
-              message: "Instagram Clone",
-              description: error.message || "Something went wrong. Please try again!"
+              message: "MyMoments",
+              description: "Something went wrong. Please try again!"
             });
           });
       })
       .catch(error => {
         notification.error({
-          message: "Instagram Clone",
+          message: "MyMoments",
           description:
             error.message || "Something went wrong. Please try again!"
         });
@@ -121,7 +121,7 @@ class MeProfile extends Component {
 
   handleFollowersClick = () => {
     if (this.state.followers > 0) {
-      getFollowers(this.state.currentUser.username).then(response =>
+      getfollowers(this.state.currentUser.username).then(response =>
         this.setState({ followerList: response, followersModalVisible: true })
       );
     }
@@ -129,7 +129,7 @@ class MeProfile extends Component {
 
   handleFollowingClick = () => {
     if (this.state.following > 0) {
-      getFollowing(this.state.currentUser.username).then(response =>
+      getfollowing(this.state.currentUser.username).then(response =>
         this.setState({ followingList: response, followingModalVisible: true })
       );
     }
@@ -155,7 +155,7 @@ class MeProfile extends Component {
     }
 
     return (
-      <div className="profile">
+      <div className="profile-container">
         <Row>
           <Col span={24}>
             <div className="user-details">

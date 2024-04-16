@@ -1,4 +1,4 @@
-.signup {
+.signup-container {
   max-width: 420px;
   margin: 0 auto;
   margin: 0 auto;
@@ -10,7 +10,7 @@
   font-weight: 700;
 }
 
-.login-link {
+.login-link-container {
   display: flex;
   justify-content: center;
   max-width: 420px;
@@ -23,7 +23,7 @@
   color: #999;
 }
 
-.login-link a {
+.login-link-container a {
   margin-left: 5px;
   font-weight: bold;
   color: #003569;
@@ -37,10 +37,10 @@
   margin-bottom: 10px;
 }
 
-.logo {
+.logo-container {
   margin-bottom: 50px;
 }
 
-.signup img {
+.signup-container img {
   width: 200px;
 }

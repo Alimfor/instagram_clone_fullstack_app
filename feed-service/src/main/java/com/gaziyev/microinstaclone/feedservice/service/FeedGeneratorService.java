@@ -73,11 +73,10 @@ public class FeedGeneratorService {
                     .registerTypeAdapter(Instant.class, new InstantDateTypeAdapter())
                     .create();
 
-            String feed_key = "user_feed:" + post.getUsername();
-
             result.getContents().stream()
                     .map(user -> convertTo(user, post))
                     .forEach(userFeed -> {
+                                String feed_key = "user_feed:" + userFeed.getUsername();
                                 switch (action) {
                                     case "adding" -> redisTemplate.opsForList()
                                             .leftPush(feed_key, gson.toJson(userFeed));

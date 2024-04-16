@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import { Menu, Row, Col, Input, Icon } from "antd";
 import { Link, withRouter } from "react-router-dom";
 import "./AppHeader.css";
+import NewPost from "../post/newpost/NewPost";
 
 const Search = Input.Search;
 
@@ -29,15 +30,18 @@ class AppHeader extends Component {
       <div style={{ marginLeft: "17%", marginRight: "17%" }}>
         <Row>
           <Col span={8}>
-            <div className="app-logo">
+            <div className="app-logo-container">
               <Link to="/">
-                <span>Instagram Clone</span>
+                <span>𝓜𝔂 𝓜𝓸𝓶𝓮𝓷𝓽𝓼</span>
               </Link>
             </div>
           </Col>
 
           <Col span={6}>
             <Search />
+          </Col>
+          <Col span={2}>
+            <NewPost onGetUserPosts={this.props.onGetUserPosts} />
           </Col>
 
           <Col span={8} push={4}>

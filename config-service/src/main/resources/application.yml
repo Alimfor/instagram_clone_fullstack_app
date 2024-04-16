@@ -9,6 +9,9 @@ spring:
       server:
         git:
           uri:  https://github.com/Alimfor/instagram-clone-servers-config.git
+          default-label: main
+          clone-on-start: true
+          force-pull: true
 
 management:
   endpoints:
