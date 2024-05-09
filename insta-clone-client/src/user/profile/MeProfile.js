@@ -97,20 +97,20 @@ class MeProfile extends Component {
             this.props.onUpdateCurrentUser(currentUser);
 
             notification.success({
-              message: "MyMoments",
+              message: "𝒜𝓁𝒾𝓂𝒻𝑜𝓇",
               description: "Profile picture updated"
             });
           })
           .catch(error => {
             notification.error({
-              message: "MyMoments",
+              message: "𝒜𝓁𝒾𝓂𝒻𝑜𝓇",
               description: "Something went wrong. Please try again!"
             });
           });
       })
       .catch(error => {
         notification.error({
-          message: "MyMoments",
+          message: "𝒜𝓁𝒾𝓂𝒻𝑜𝓇",
           description:
             error.message || "Something went wrong. Please try again!"
         });

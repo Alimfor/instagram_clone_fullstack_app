@@ -394,6 +394,16 @@ services:
       file: common-config.yml
       service: microservice-configserver-config
 
+#  front:
+#    build:
+#      context: ../insta-clone-client/
+#      dockerfile: Dockerfile
+#    container_name: front
+#    ports:
+#      - "3000:3000"
+#    networks:
+#      - app_net
+
 networks:
   mongo_network:
     driver: bridge

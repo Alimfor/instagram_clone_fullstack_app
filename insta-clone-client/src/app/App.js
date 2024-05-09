@@ -123,8 +123,9 @@ class App extends Component {
               <Route
                 exact
                 path="/login"
+
                 render={props => (
-                  <Login
+                    <Login
                     isAuthenticated={this.state.isAuthenticated}
                     currentUser={this.state.currentUser}
                     onLogin={this.handleLogin}

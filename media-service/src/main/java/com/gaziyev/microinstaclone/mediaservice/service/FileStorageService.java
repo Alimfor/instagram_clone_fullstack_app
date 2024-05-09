@@ -15,7 +15,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.InetAddress;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -74,7 +73,7 @@ public class FileStorageService {
 			}
 
 			String port = environment.getProperty("local.server.port");
-			String hostName = InetAddress.getLocalHost().getHostName();
+			String hostName = "127.0.0.1"; //InetAddress.getLocalHost().getHostName();
 
 			String fileUrl = String.format("http://%s:%s%s/%s/%s",
 			                               hostName,port, filePathPrefix, username, newFilename);

@@ -32,7 +32,7 @@ class AppHeader extends Component {
           <Col span={8}>
             <div className="app-logo-container">
               <Link to="/">
-                <span>𝓜𝔂 𝓜𝓸𝓶𝓮𝓷𝓽𝓼</span>
+                <span>𝒜𝓁𝒾𝓂𝒻𝑜𝓇</span>
               </Link>
             </div>
           </Col>

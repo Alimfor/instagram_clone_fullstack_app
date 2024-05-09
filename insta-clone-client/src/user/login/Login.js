@@ -24,7 +24,7 @@ class Login extends Component {
           <Row type="flex" justify="center">
             <Col pan={24}>
               <div className="logo-container">
-                <span>𝓜𝔂 𝓜𝓸𝓶𝓮𝓷𝓽𝓼</span>
+                <span>𝒜𝓁𝒾𝓂𝒻𝑜𝓇</span>
               </div>
             </Col>
             <Col pan={24}>
@@ -57,13 +57,13 @@ class LoginForm extends Component {
           .catch(error => {
             if (error.status === 401) {
               notification.error({
-                message: "MyMoments",
+                message: "𝒜𝓁𝒾𝓂𝒻𝑜𝓇",
                 description:
                   "Username or Password is incorrect. Please try again!"
               });
             } else {
               notification.error({
-                message: "MyMoments",
+                message: "𝒜𝓁𝒾𝓂𝒻𝑜𝓇",
                 description:
                   error.message ||
                   "Sorry! Something went wrong. Please try again!"

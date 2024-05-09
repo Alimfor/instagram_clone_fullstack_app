@@ -58,7 +58,7 @@ class NewPost extends Component {
       .catch(error => {
         this.setState({ uploading: false });
         notification.error({
-          message: "MyMoments",
+          message: "𝒜𝓁𝒾𝓂𝒻𝑜𝓇",
           description:
             error.message || "Something went wrong. Please try again!"
         });
@@ -83,7 +83,7 @@ class NewPost extends Component {
         this.props.onGetUserPosts();
 
         notification.success({
-          message: "MyMoments",
+          message: "𝒜𝓁𝒾𝓂𝒻𝑜𝓇",
           description: "New post shared"
         });
       })
@@ -91,7 +91,7 @@ class NewPost extends Component {
         this.setState({ loading: false });
 
         notification.error({
-          message: "MyMoments",
+          message: "𝒜𝓁𝒾𝓂𝒻𝑜𝓇",
           description:
             error.message || "Something went wrong. Please try again!"
         });

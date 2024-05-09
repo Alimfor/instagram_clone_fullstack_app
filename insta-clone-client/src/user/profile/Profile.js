@@ -80,7 +80,7 @@ class Profile extends Component {
 
         if (error.status === 404) {
           notification.error({
-            message: "MyMoments",
+            message: "𝒜𝓁𝒾𝓂𝒻𝑜𝓇",
             description: "user not found"
           });
         }
